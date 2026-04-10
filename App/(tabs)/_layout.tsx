@@ -4,6 +4,13 @@ import { Ionicons } from '@expo/vector-icons';
 export default function TabLayout() {
   return (
     <Tabs screenOptions={{ 
+      headerShown: true,
+      headerStyle: {
+        backgroundColor: '#000',
+        borderBottomWidth: 0,
+        shadowOpacity: 0,
+        elevation: 0,
+      },
       tabBarActiveTintColor: '#E50914', // Netflix Red
       tabBarStyle: { backgroundColor: '#2e2e2e' } 
     }}>
