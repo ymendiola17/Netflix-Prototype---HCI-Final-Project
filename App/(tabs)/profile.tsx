@@ -47,7 +47,12 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#000', padding: 20, borderWidth: 0.5, borderColor: 'red', },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#000', 
+    padding: 20, 
+    borderWidth: 0.5, 
+    borderColor: 'red', },
   header: {
     flexDirection: 'row',
     justifyContent: 'flex-end', // push to right
