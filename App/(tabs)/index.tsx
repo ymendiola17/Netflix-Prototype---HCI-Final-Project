@@ -6,7 +6,7 @@ import { useUserLists } from '../../context/UserListContext';
 
 export default function HomeScreen() {
   const { lists } = useUserLists();
-  const sorted = [...lists].sort((a, b) => a.order - b.order);
+  const sorted = [...lists].filter(list => list.visibleOnHome).sort((a, b) => a.order - b.order);
   return (
     <ScrollView style={styles.container}>
 
@@ -39,19 +39,7 @@ export default function HomeScreen() {
           />
         </TouchableOpacity>
       </View>
-      {/* Friends  Header*/}
-      <View style={styles.headerTitlePosition}>
-          <Text style= {styles.titleHeader}>My List</Text>
-      </View>
-      {/* video tab */}
-      <View style={styles.tabRow}>
-        <TouchableOpacity style={[styles.video, styles.activeTab]}>
-          <Text style={styles.tabText}>Video1</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.video, styles.activeTab]}>
-          <Text style={styles.tabText}>Video2</Text>
-        </TouchableOpacity>
-      </View>
+    
       <View style={{ marginTop: 24 }}>
         {sorted.map(list => (
           <ContentRow key={list.id} title={list.title} items={list.items} />

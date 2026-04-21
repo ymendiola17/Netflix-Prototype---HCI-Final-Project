@@ -11,4 +11,5 @@ export interface ListConfig {
     type: 'category' | 'custom';
     items: ContentItem[];
     order: number;
+    visibleOnHome: boolean;
 }

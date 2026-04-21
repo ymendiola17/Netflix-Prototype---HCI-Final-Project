@@ -6,6 +6,7 @@ interface UserListsContextType {
     addList: (list: ListConfig) => void;
     removeList: (id: string) => void;
     reorderLists: (newOrder: ListConfig[]) => void;
+    toggleHomeVisibility: (id: string) => void;
 }
 
 const UserListsContext = createContext<UserListsContextType | null>(null);
@@ -18,6 +19,7 @@ export function UserListsProvider({ children }: { children: React.ReactNode })
             title: 'Trending Now',
             type: 'category',
             order: 0,
+            visibleOnHome: true,
             items: [
                 { id: '1', title: 'Show A', posterUrl: '', type: 'show' },
                 { id: '2', title: 'Show B', posterUrl: '', type: 'show' },
@@ -30,6 +32,7 @@ export function UserListsProvider({ children }: { children: React.ReactNode })
             title: 'My List',
             type: 'custom',
             order: 1,
+            visibleOnHome: true,
             items: [
                 { id: '4', title: 'Movie X', posterUrl: '', type: 'movie' },
                 { id: '5', title: 'Movie Y', posterUrl: '', type: 'movie'},
@@ -46,8 +49,15 @@ export function UserListsProvider({ children }: { children: React.ReactNode })
     const reorderLists = (newOrder: ListConfig[]) =>
         setLists(newOrder);
 
+    const toggleHomeVisibility = (id: string) =>
+        setLists(prev =>
+            prev.map(list =>
+                list.id === id ? { ...list, visibleOnHome: !list.visibleOnHome } : list
+            )
+        );
+
     return (
-        <UserListsContext.Provider value={{ lists, addList, removeList, reorderLists }}>
+        <UserListsContext.Provider value={{ lists, addList, removeList, reorderLists, toggleHomeVisibility }}>
             {children}
         </UserListsContext.Provider>
     );
