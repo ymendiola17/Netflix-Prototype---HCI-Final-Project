@@ -1,8 +1,12 @@
 import { View, Text, ScrollView, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import ContentRow from '../../components/ContentRow';
+import { useUserLists } from '../../context/UserListContext';
 
-export default function ProfileScreen() {
+export default function HomeScreen() {
+  const { lists } = useUserLists();
+  const sorted = [...lists].sort((a, b) => a.order - b.order);
   return (
     <ScrollView style={styles.container}>
 
@@ -48,17 +52,11 @@ export default function ProfileScreen() {
           <Text style={styles.tabText}>Video2</Text>
         </TouchableOpacity>
       </View>
-
-      
-
-      
-      {/* The Settings Option 
-      <Link href="/settings" style={styles.optionRow}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Ionicons name="settings-outline" size={20} color="white" />
-          <Text style={styles.optionText}>App Settings</Text>
-        </View>
-      </Link> */}
+      <View style={{ marginTop: 24 }}>
+        {sorted.map(list => (
+          <ContentRow key={list.id} title={list.title} items={list.items} />
+        ))}
+      </View>
     </ScrollView>
   );
 }

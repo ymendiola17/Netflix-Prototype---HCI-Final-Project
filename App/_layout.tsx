@@ -1,7 +1,8 @@
+import React from 'react';
 import { View } from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { UserListsProvider } from '../context/UserListsContext';
+import { UserListsProvider } from '../context/UserListContext';
 
 export default function RootLayout() {
   return (

@@ -41,7 +41,7 @@ export function UserListsProvider({ children }: { children: React.ReactNode })
         setLists(prev => [...prev, list]);
 
     const removeList = (id: string) =>
-        setLists(prev => prev.filter(1 => 1.id !== id));
+        setLists(prev => prev.filter(l => l.id !== id));
 
     const reorderLists = (newOrder: ListConfig[]) =>
         setLists(newOrder);
