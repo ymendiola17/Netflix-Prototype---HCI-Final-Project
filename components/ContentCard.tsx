@@ -1,9 +1,12 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { ContentItem } from '../types';
 
+
+import { router } from 'expo-router';
+
 export default function ContentCard({ item }: { item: ContentItem }) {
   return (
-    <TouchableOpacity style={styles.card} onPress={() => console.log('pressed', item.title)}>
+    <TouchableOpacity style={styles.card} onPress={() => router.push('/moviesdescription')}>
       <Image source={item.posterUrl} style={styles.poster} />
     </TouchableOpacity>
   );

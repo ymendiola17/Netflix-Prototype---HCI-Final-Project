@@ -67,7 +67,7 @@ export default function HomeScreen() {
             </Link>
 
           </View>
-
+          {/*----List Boxes----*/}
           <View style={{ marginTop: 24 }}>
             {sorted.map(list => (
               <ContentRow key={list.id} title={list.title} items={list.items} />
