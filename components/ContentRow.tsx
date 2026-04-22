@@ -24,5 +24,5 @@ export default function ContentRow({ title, items }: Props) {
 
 const styles = StyleSheet.create({
   container: { marginBottom: 28 },
-  title: { color: '#fff', fontSize: 18, fontWeight: '600', marginBottom: 10, paddingHorizontal: 5 },
+  title: { color: '#fff', fontSize: 25, fontFamily: 'BebasNeue', marginBottom: 10, paddingHorizontal: 5 },
 });

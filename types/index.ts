@@ -1,8 +1,9 @@
 export interface ContentItem {
     id: string;
     title: string;
-    posterUrl: string;
+    posterUrl: any; // Adjust type as needed, e.g., string or ImageSourcePropType
     type: 'movie' | 'show';
+    font: string;
 }
 
 export interface ListConfig {
@@ -12,4 +13,5 @@ export interface ListConfig {
     items: ContentItem[];
     order: number;
     visibleOnHome: boolean;
+    font: string;
 }

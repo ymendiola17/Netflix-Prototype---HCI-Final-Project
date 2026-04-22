@@ -18,12 +18,14 @@ export function UserListsProvider({ children }: { children: React.ReactNode })
             id: 'trending',
             title: 'Trending Now',
             type: 'category',
-            order: 0,
+            font: 'BebasNeue',
+            order: 1,
             visibleOnHome: true,
             items: [
-                { id: '1', title: 'Show A', posterUrl: '', type: 'show' },
-                { id: '2', title: 'Show B', posterUrl: '', type: 'show' },
-                { id: '3', title: 'Show C', posterUrl: '', type: 'movie' },
+                { id: '1', title: 'BloodHounds 3', posterUrl:require('../assets/posters/Genre/Action/BloodHounds3.webp'), type: 'show', font: 'BebasNeue', genre: 'Action' },
+                { id: '2', title: 'Coco', posterUrl: require('../assets/posters/Genre/ChildrenAndFamily/Coco.webp'), type: 'movie', font: 'BebasNeue', genre: 'ChildrenAndFamily' },
+                { id: '3', title: 'The Croods', posterUrl: require('../assets/posters/Genre/ChildrenAndFamily/TheCroods.webp'), type: 'movie', font: 'BebasNeue', genre: 'ChildrenAndFamily' },
+                { id: '4', title: 'Anonymously Yours', posterUrl: require('../assets/posters/Genre/Romance/AnonymouslyYours.webp'), type: 'movie', font: 'BebasNeue', genre: 'Romance' }
 
             ],
         },
@@ -31,11 +33,12 @@ export function UserListsProvider({ children }: { children: React.ReactNode })
             id: 'myList',
             title: 'My List',
             type: 'custom',
+            font: 'BebasNeue',
             order: 1,
             visibleOnHome: true,
             items: [
-                { id: '4', title: 'Movie X', posterUrl: '', type: 'movie' },
-                { id: '5', title: 'Movie Y', posterUrl: '', type: 'movie'},
+                { id: '4', title: 'Anonymously Yours', posterUrl: require('../assets/posters/Genre/Romance/AnonymouslyYours.webp'), type: 'movie', font: 'BebasNeue', genre: 'Romance' },
+                { id: '5', title: 'We Bare Bears', posterUrl: require('../assets/posters/Genre/ChildrenAndFamily/WeBareBears.webp'), type: 'show', font: 'BebasNeue', genre: 'ChildrenAndFamily'},
             ],
         },
     ]);

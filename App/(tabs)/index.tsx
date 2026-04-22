@@ -124,9 +124,11 @@ const styles = StyleSheet.create({
   
   titleHeader: {
     color: 'white',
-    fontSize: 30,
+    fontSize: 25,
     flexDirection:'row',
     justifyContent: 'flex-start',
+    fontFamily: 'BebasNeue', // Use the custom font
+
   },
   video: {
     borderWidth: 0.5,
@@ -152,5 +154,6 @@ const styles = StyleSheet.create({
       
   },
   optionRow: { paddingVertical: 15, borderBottomWidth: 0.5, borderBottomColor: '#333' },
-  optionText: { color: 'white', fontSize: 18, marginLeft: 10 }
+  optionText: { color: 'white', fontSize: 18, marginLeft: 10 },
+
 });
