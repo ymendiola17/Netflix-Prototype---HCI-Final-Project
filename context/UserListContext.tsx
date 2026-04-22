@@ -7,6 +7,8 @@ interface UserListsContextType {
     removeList: (id: string) => void;
     reorderLists: (newOrder: ListConfig[]) => void;
     toggleHomeVisibility: (id: string) => void;
+    toggleFavorite: (listId: string, itemId: string) => void;
+    removeItemFromList: (listId: string, itemId: string) => void;
 }
 
 const UserListsContext = createContext<UserListsContextType | null>(null);
@@ -55,9 +57,32 @@ export function UserListsProvider({ children }: { children: React.ReactNode })
                 list.id === id ? { ...list, visibleOnHome: !list.visibleOnHome } : list
             )
         );
+    
+    const toggleFavorite = (listId: string, itemId: string) =>
+        setLists(prev =>
+            prev.map(list =>
+                list.id === listId
+                ? {
+                    ...list,
+                    items: list.items.map(item =>
+                        item.id === itemId ? { ...item, isFavorited: !item.isFavorited } : item
+                    ),
+                }
+                : list
+            )
+        );
+    
+    const removeItemFromList = (listId: string, itemId: string) =>
+        setLists(prev =>
+            prev.map(list =>
+                list.id === listId
+                ? { ...list, items: list.items.filter(item => item.id !== itemId) }
+                : list
+            )
+        );
 
     return (
-        <UserListsContext.Provider value={{ lists, addList, removeList, reorderLists, toggleHomeVisibility }}>
+        <UserListsContext.Provider value={{ lists, addList, removeList, reorderLists, toggleHomeVisibility, toggleFavorite, removeItemFromList }}>
             {children}
         </UserListsContext.Provider>
     );

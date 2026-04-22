@@ -3,6 +3,7 @@ export interface ContentItem {
     title: string;
     posterUrl: string;
     type: 'movie' | 'show';
+    isFavorited?: boolean;
 }
 
 export interface ListConfig {

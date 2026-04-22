@@ -2,9 +2,12 @@ import { View, Text, ScrollView, Image, TouchableOpacity, StyleSheet, TextInput,
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useUserLists } from '../../context/UserListContext';
+import { MyListsTab } from '../../components/MyListsTab';
+
 
 export default function ProfileScreen() {
-  const { lists, addList, removeList, toggleHomeVisibility } = useUserLists();
+  const { lists, addList, removeList, toggleHomeVisibility, toggleFavorite, removeItemFromList } = useUserLists();
+  const [activeTab, setActiveTab] = useState<'picks' | 'lists'>('picks');
   const [modalVisible, setModalVisible] = useState(false);
   const [newListName, setNewListName] = useState('');
 
@@ -38,36 +41,70 @@ export default function ProfileScreen() {
         <Text style={styles.userName}>Username</Text>
       </View>
 
-      {/* My Lists section */}
-      <Text style={styles.sectionTitle}>My Lists</Text>
+      {/*Tab Buttons*/}
+      <View style={styles.tabRow}>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'picks' && styles.activeTab]}
+          onPress={() => setActiveTab('picks')}
+        >
+          <Text style={[styles.tabText, activeTab === 'picks' && styles.activeTabText]}>
+            My Picks
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'lists' && styles.activeTab]}
+          onPress={() => setActiveTab('lists')}
+        >
+          <Text style={[styles.tabText, activeTab === 'lists' && styles.activeTabText]}>
+            My Lists
+          </Text>
+        </TouchableOpacity>
+      </View>
 
-      {lists.filter(l => l.type === 'custom').map(list => (
-        <View key={list.id} style={styles.listRow}>
-          <Text style={styles.listName}>{list.title}</Text>
-          <View style={styles.listActions}>
-            {/* Toggle whether it shows on home */}
-            <TouchableOpacity
-              style={[styles.homeToggle, list.visibleOnHome && styles.homeToggleActive]}
-              onPress={() => toggleHomeVisibility(list.id)}
-            >
-              <Text style={styles.homeToggleText}>
-                {list.visibleOnHome ? 'On Home' : 'Add to Home'}
-              </Text>
-            </TouchableOpacity>
-            {/* Delete list */}
-            <TouchableOpacity onPress={() => removeList(list.id)}>
-              <Ionicons name="trash-outline" size={20} color="#888" />
-            </TouchableOpacity>
-          </View>
+      {/* My Picks Tab */}
+      {activeTab === 'picks' && (
+        <View>
+          <Text style={styles.sectionTitle}>Favorites</Text>
+          {/* favorites content here */}
+
+          <Text style={styles.sectionTitle}>My Actors</Text>
+          {/* actors content here */}
+
+          <Text style={styles.sectionTitle}>My Genres</Text>
+          {/* genres content here */}
         </View>
-      ))}
+      )}
 
-      {/* Create new list button */}
-      <TouchableOpacity style={styles.createButton} onPress={() => setModalVisible(true)}>
-        <Ionicons name="add-circle-outline" size={20} color="#E50914" />
-        <Text style={styles.createButtonText}>Create New List</Text>
-      </TouchableOpacity>
+      {/* My Lists Tab */}
+      {activeTab === 'lists' && <MyListsTab />} (
+        <View>
+          <Text style={styles.sectionTitle}>My Lists</Text>
 
+          {lists.filter(l => l.type === 'custom').map(list => (
+            <View key={list.id} style={styles.listRow}>
+              <Text style={styles.listName}>{list.title}</Text>
+              <View style={styles.listActions}>
+                <TouchableOpacity
+                  style={[styles.homeToggle, list.visibleOnHome && styles.homeToggleActive]}
+                  onPress={() => toggleHomeVisibility(list.id)}
+                >
+                  <Text style={styles.homeToggleText}>
+                    {list.visibleOnHome ? 'On Home' : 'Add to Home'}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => removeList(list.id)}>
+                  <Ionicons name="trash-outline" size={20} color="#888" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ))}
+
+          <TouchableOpacity style={styles.createButton} onPress={() => setModalVisible(true)}>
+            <Ionicons name="add-circle-outline" size={20} color="#E50914" />
+            <Text style={styles.createButtonText}>Create New List</Text>
+          </TouchableOpacity>
+        </View>
+      )
       {/* Modal for naming the new list */}
       <Modal visible={modalVisible} transparent animationType="fade">
         <View style={styles.modalOverlay}>
@@ -102,23 +139,52 @@ const styles = StyleSheet.create({
   profileSection: { alignItems: 'center', marginBottom: 30 },
   profilePic: { borderWidth: 2, borderColor: '#E50914', width: 90, height: 90, borderRadius: 50 },
   userName: { color: 'white', fontSize: 20, marginTop: 10 },
-  sectionTitle: { color: 'white', fontSize: 22, fontWeight: '600', marginBottom: 16 },
+  sectionTitle: { color: 'white', fontSize: 22, fontWeight: '600', marginBottom: 16, textAlign: 'center' },
   listRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 14,
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#222',
+    borderWidth: 0.5,
+    borderColor: '#222',
   },
-  listName: { color: 'white', fontSize: 16 },
-  listActions: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  homeToggle: {
-    borderWidth: 1,
-    borderColor: '#555',
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
+  tabRow: {
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: 16,
+  marginVertical: 20,
+},
+  tab: {
+  borderWidth: 1,
+  borderColor: '#555',
+  width: '45%',
+  height: 36,
+  borderRadius: 20,
+  alignItems: 'center',
+  justifyContent: 'center',
+  },
+  activeTab: {
+    borderColor: '#E50914',
+    backgroundColor: '#1a0000',
+  },
+  tabText: {
+    color: '#888',
+    fontSize: 14,
+  },
+  activeTabText: {
+    color: 'white',
+    fontWeight: '600',
+  },
+  
+    listName: { color: 'white', fontSize: 16 },
+    listActions: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+    homeToggle: {
+      borderWidth: 1,
+      borderColor: '#555',
+      borderRadius: 20,
+      paddingHorizontal: 12,
+      paddingVertical: 4,
   },
   homeToggleActive: {
     borderColor: '#E50914',
