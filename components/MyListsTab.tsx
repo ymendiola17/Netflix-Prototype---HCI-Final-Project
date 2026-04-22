@@ -6,24 +6,25 @@ import { useUserLists } from '../context/UserListContext';
 import { ListConfig } from '../types';
 
 // --- List Cover: 4-Quadrant Grid ---
-function ListCover ({ items, size = 140 }: { items: string[]; size?: number}) // react componenet that takes two props - destructures the props, then TypeScript type for the props. Items must be an array of strings, ? means it's optional, defaults to 140. 
-{
-    const half = size / 2;
-    const colors = ['#1a1a1a', '#2a2a2a', '#222', '#333'];
-    return (
-        <View style = {{ width: size, height: size, flexDirection: 'row', flexWrap: 'wrap', borderRadius: 8, overflow: 'hidden' }}>
-            {[0, 1, 2, 3].map(i =>
-                (
-                    <View key={i} style={{ width: half, height: half, backgroundColor: colors[i], alignItems: 'center', justifyContent: 'center' }}>
-                        {items[i] ? (
-                            <Image source={{ uri: items[i] }} style={{ width: half, height: half }} />
-                        ) : (
-                            <Ionicons name='film-outline' size={18} color='#555' />
-                        )}
-                        </View>
-                ))}
+function ListCover({ items, size = 140 }: { items: any[]; size?: number }) {
+  const half = size / 2;
+  const colors = ['#1a1a1a', '#2a2a2a', '#222', '#333'];
+  return (
+    <View style={{ width: size, height: size, flexDirection: 'row', flexWrap: 'wrap', borderRadius: 12, overflow: 'hidden' }}>
+      {[0, 1, 2, 3].map(i => (
+        <View key={i} style={{ width: half, height: half, backgroundColor: colors[i], alignItems: 'center', justifyContent: 'center' }}>
+          {items[i] ? (
+            <Image
+              source={typeof items[i] === 'string' ? { uri: items[i] } : items[i]}
+              style={{ width: half, height: half }}
+            />
+          ) : (
+            <Ionicons name="film-outline" size={18} color="#555" />
+          )}
         </View>
-    );
+      ))}
+    </View>
+  );
 }
 
 // --- My Lists Tab ---
@@ -44,6 +45,7 @@ export function MyListsTab() {
             type: 'custom',
             order: lists.length,
             visibleOnHome: false,
+            font: 'BebasNeue',
             items: [],
         });
         setNewListName('');
@@ -129,8 +131,8 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     sectionTitle: { color: 'white', fontSize: 22, fontWeight: '600' },
-    columnWrapper: { justifyContent: 'flex-start', gap: 16, marginBottom: 24 },
-    listItem: { width: 140, position: 'relative'},
+    columnWrapper: { justifyContent: 'center', gap: 10, marginBottom: 24 },
+    listItem: { width: '47%', position: 'relative', paddingTop: 12 },
     deleteCircle: {
         position: 'absolute',
         top: -8,

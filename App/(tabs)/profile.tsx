@@ -77,35 +77,8 @@ export default function ProfileScreen() {
       )}
 
       {/* My Lists Tab */}
-      {activeTab === 'lists' && <MyListsTab />} (
-        <View>
-          <Text style={styles.sectionTitle}>My Lists</Text>
-
-          {lists.filter(l => l.type === 'custom').map(list => (
-            <View key={list.id} style={styles.listRow}>
-              <Text style={styles.listName}>{list.title}</Text>
-              <View style={styles.listActions}>
-                <TouchableOpacity
-                  style={[styles.homeToggle, list.visibleOnHome && styles.homeToggleActive]}
-                  onPress={() => toggleHomeVisibility(list.id)}
-                >
-                  <Text style={styles.homeToggleText}>
-                    {list.visibleOnHome ? 'On Home' : 'Add to Home'}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => removeList(list.id)}>
-                  <Ionicons name="trash-outline" size={20} color="#888" />
-                </TouchableOpacity>
-              </View>
-            </View>
-          ))}
-
-          <TouchableOpacity style={styles.createButton} onPress={() => setModalVisible(true)}>
-            <Ionicons name="add-circle-outline" size={20} color="#E50914" />
-            <Text style={styles.createButtonText}>Create New List</Text>
-          </TouchableOpacity>
-        </View>
-      )
+      {activeTab === 'lists' && <MyListsTab />}
+        
       {/* Modal for naming the new list */}
       <Modal visible={modalVisible} transparent animationType="fade">
         <View style={styles.modalOverlay}>
