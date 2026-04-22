@@ -5,7 +5,6 @@ export default function ContentCard({ item }: { item: ContentItem }) {
   return (
     <TouchableOpacity style={styles.card} onPress={() => console.log('pressed', item.title)}>
       <Image source={item.posterUrl} style={styles.poster} />
-      <Text style={styles.title} numberOfLines={1}>{item.title}</Text>
     </TouchableOpacity>
   );
 }
@@ -20,5 +19,5 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: '#333',
   },
-  title: { color: '#ccc', fontSize: 15, marginTop: 5, fontFamily: 'BebasNeue', textAlign: 'center' },
+  title: { color: '#ccc',  fontSize: 15, marginTop: 5, fontFamily: 'BebasNeue', textAlign: 'center' },
 });

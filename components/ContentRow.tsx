@@ -23,6 +23,6 @@ export default function ContentRow({ title, items }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { marginBottom: 28 },
+  container: { marginBottom: 20 },
   title: { color: '#fff', fontSize: 25, fontFamily: 'BebasNeue', marginBottom: 10, paddingHorizontal: 5 },
 });

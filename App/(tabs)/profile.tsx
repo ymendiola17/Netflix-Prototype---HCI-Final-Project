@@ -14,6 +14,7 @@ export default function ProfileScreen() {
       id: Date.now().toString(),
       title: newListName.trim(),
       type: 'custom',
+      font: 'BebasNeue',
       order: lists.length,
       visibleOnHome: false,  // off by default, user toggles it on
       items: [],

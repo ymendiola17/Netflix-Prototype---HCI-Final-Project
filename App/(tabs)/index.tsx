@@ -1,51 +1,81 @@
-import { View, Text, ScrollView, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { Link } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import {View,Text,ScrollView,Image,TouchableOpacity,StyleSheet,Pressable,Keyboard,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import SearchHeader from '../../components/SearchHeader';
 import ContentRow from '../../components/ContentRow';
 import { useUserLists } from '../../context/UserListContext';
+import { Link } from 'expo-router';
 
 export default function HomeScreen() {
   const { lists } = useUserLists();
-  const sorted = [...lists].filter(list => list.visibleOnHome).sort((a, b) => a.order - b.order);
+  const sorted = [...lists]
+    .filter(list => list.visibleOnHome)
+    .sort((a, b) => a.order - b.order);
+
   return (
-    <ScrollView style={styles.container}>
+    <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#000' }}>
+        <SearchHeader />
 
-      {/* USer Icon */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => console.log('UserPressed')}>
-           <Image
-                style={styles.mainUser}
-            />
-            <Text style= {styles.userName}>Home</Text>
-        </TouchableOpacity>
-      </View>
+        <ScrollView
+          style={styles.container}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.headerTitlePosition}>
+            <Text style={styles.titleHeader}>My Friends</Text>
+          </View>
 
-      {/* Friends  Header*/}
-      <View style={styles.headerTitlePosition}>
-          <Text style= {styles.titleHeader}>My Friends</Text>
-      </View>
+          <View style={styles.otherUserSection}>
+          <Link href="/profiles/yani" asChild>
+            <TouchableOpacity style={styles.activeTab}>
+              <Image
+                source={require('../../assets/ProfilePictures/yani.jpeg')}
+                style={styles.friendList}
+              />
+              <Text style={styles.userName}>Yani</Text>
+            </TouchableOpacity>
+          </Link>
 
-      {/* Other user*/}
-      <View style={styles.otherUserSection}>
-       <TouchableOpacity style={[styles.activeTab]}>
-          <Image
-            style={styles.friendList}
-          />
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={[ styles.activeTab] }>
-          <Image
-            style={styles.friendList}
-          />
-        </TouchableOpacity>
-      </View>
-    
-      <View style={{ marginTop: 24 }}>
-        {sorted.map(list => (
-          <ContentRow key={list.id} title={list.title} items={list.items} />
-        ))}
-      </View>
-    </ScrollView>
+          <Link href="/profiles/kamy" asChild>
+            <TouchableOpacity style={styles.activeTab}>
+              <Image
+                source={require('../../assets/ProfilePictures/profIslam.jpg')}
+                style={styles.friendList}
+              />
+              <Text style={styles.userName}>Kamy</Text>
+            </TouchableOpacity>
+          </Link>
+
+            <Link href="/profiles/amber" asChild>
+              <TouchableOpacity style={styles.activeTab}>
+                <Image
+                  source={require('../../assets/ProfilePictures/amber.jpg')}
+                  style={styles.friendList}
+                />
+                <Text style={styles.userName}>Amber</Text>
+              </TouchableOpacity>
+            </Link>
+
+            <Link href="/profiles/isaiah" asChild>
+              <TouchableOpacity style={styles.activeTab}>
+                <Image
+                  source={require('../../assets/ProfilePictures/profIslam.jpg')}
+                  style={styles.friendList}
+                />
+                <Text style={styles.userName}>Isaiah</Text>
+              </TouchableOpacity>
+            </Link>
+
+          </View>
+
+          <View style={{ marginTop: 24 }}>
+            {sorted.map(list => (
+              <ContentRow key={list.id} title={list.title} items={list.items} />
+            ))}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </Pressable>
   );
 }
 
@@ -59,10 +89,10 @@ const styles = StyleSheet.create({
   },
   friendList: {
     borderWidth: 1,
-    borderColor: '#E50914',
+    borderColor: '#f3f3f3',
     width: 75,
     height: 75,
-    borderRadius: 0,
+    borderRadius: 75,
   },
   headerTitlePosition: {
     flexDirection: 'row',
@@ -91,6 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     height: 100,
+    borderRadius:20,
     borderWidth: 0.5,
     borderColor: 'black',
     gap: 20,
@@ -107,9 +138,10 @@ const styles = StyleSheet.create({
   
   userName: {
     color: 'white',
-    fontSize: 10,
+    fontSize: 13,
     flexDirection:'row',
     justifyContent: 'flex-start',
+    textAlign: 'center',
   },
   tabRow: {
     flexDirection: 'row',
