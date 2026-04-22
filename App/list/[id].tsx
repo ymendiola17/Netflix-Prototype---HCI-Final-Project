@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useUserLists } from '../../context/UserListContext';
 
-function ListCover({ items, size = 160 }: { items: string[]; size?: number }) {
+function ListCover({ items, size = 160 }: { items: any[]; size?: number }) {
   const half = size / 2;
   const colors = ['#1a1a1a', '#2a2a2a', '#222', '#333'];
   return (
@@ -13,7 +13,10 @@ function ListCover({ items, size = 160 }: { items: string[]; size?: number }) {
       {[0, 1, 2, 3].map(i => (
         <View key={i} style={{ width: half, height: half, backgroundColor: colors[i], alignItems: 'center', justifyContent: 'center' }}>
           {items[i] ? (
-            <Image source={{ uri: items[i] }} style={{ width: half, height: half }} />
+            <Image
+              source={typeof items[i] === 'string' ? { uri: items[i] } : items[i]}
+              style={{ width: half, height: half }}
+            />
           ) : (
             <Ionicons name="film-outline" size={20} color="#555" />
           )}
@@ -25,7 +28,7 @@ function ListCover({ items, size = 160 }: { items: string[]; size?: number }) {
 
 export default function ListPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { lists, toggleFavorite, removeItemFromList, removeList } = useUserLists();
+  const { lists, toggleHomeVisibility, toggleFavorite, removeItemFromList, removeList } = useUserLists();
   const router = useRouter();
 
   const [itemModal, setItemModal] = useState(false);
@@ -57,7 +60,7 @@ export default function ListPage() {
       <Text style={{ color: 'white' }}>List not found</Text>
     </View>
   );
-  
+
     return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }}>
 
@@ -94,9 +97,17 @@ export default function ListPage() {
       {list.items.map(item => (
         <View key={item.id} style={styles.itemRow}>
           {/* Poster */}
-          <View style={styles.poster}>
+          {/* Poster */}
+        <View style={styles.poster}>
+        {item.posterUrl ? (
+            <Image
+            source={typeof item.posterUrl === 'string' ? { uri: item.posterUrl } : item.posterUrl}
+            style={{ width: 56, height: 80, borderRadius: 4 }}
+            />
+        ) : (
             <Ionicons name="film-outline" size={20} color="#555" />
-          </View>
+        )}
+        </View>
           {/* Title */}
           <Text style={styles.itemTitle} numberOfLines={2}>{item.title}</Text>
           {/* Actions */}
@@ -147,6 +158,20 @@ export default function ListPage() {
             <TouchableOpacity style={styles.sheetRow}>
               <Ionicons name="people-outline" size={20} color="white" />
               <Text style={styles.sheetText}>Start Collab</Text>
+            </TouchableOpacity>
+            <View style={styles.sheetDivider} />
+            <TouchableOpacity
+                style={[styles.sheetRow]}
+                onPress={() => toggleHomeVisibility(list.id)}
+                >
+                <Ionicons
+                name={list.visibleOnHome ? 'home' : 'home-outline'}
+                size={20}
+                color={list.visibleOnHome ? '#E50914' : 'white'}
+                />
+                <Text style={[styles.sheetText, list.visibleOnHome && {color: '#E50914'}]}>
+                {list.visibleOnHome ? 'Remove from Home' : 'Add to Home'}
+                </Text>
             </TouchableOpacity>
             <View style={styles.sheetDivider} />
             <TouchableOpacity style={styles.sheetRow} onPress={handleDeleteList}>
@@ -223,4 +248,18 @@ const styles = StyleSheet.create({
   sheetRow: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 14 },
   sheetText: { color: 'white', fontSize: 16 },
   sheetDivider: { height: 0.5, backgroundColor: '#333' },
+  homeToggle: {
+      borderWidth: 1,
+      borderColor: '#555',
+      borderRadius: 20,
+      paddingHorizontal: 12,
+      paddingVertical: 4,
+  },
+  homeToggleText: { color: 'white', fontSize: 12 },
+  createButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 24,
+  },
 });
