@@ -26,7 +26,7 @@ export default function Page() {
         setMyStatus(val);
       });
     } else {
-      const text = prompt("How are you feeling?");
+      const text = prompt("Your thoughts go here...");
       if (text) {
         setMyStatus(text);
       }
@@ -57,7 +57,7 @@ export default function Page() {
               // Interactive status circles, only first bubble.
               <TouchableOpacity 
                 style={[styles.statusCircle, { borderColor: getBorderColor(index) }]} 
-                // Only the first circle (index 0) is clickable
+                // Only the first circle (index 0) is clickable.
                 onPress={index === 0 ? updateMyStatus : undefined}
                 activeOpacity={index === 0 ? 0.7 : 1}
               >
@@ -87,7 +87,7 @@ const getBorderColor = (index: number) => {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: '#fefcfc' 
+    backgroundColor: '#000000' 
   },
   // The header at the top of the screen.
   header: { 
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10, 
     borderBottomWidth: 1, 
     borderBottomColor: '#fefbfb',
-    marginTop: Platform.OS === 'ios' ? 50 : 20 
+    marginTop: Platform.OS === 'ios' ? 50 : 20
   },
   // The back button at the top of screen.
   backButton: { 
@@ -110,14 +110,20 @@ const styles = StyleSheet.create({
   },
   // The back icon at top of screen.
   backIcon: { color: '#fcf9f9', fontSize: 18, fontWeight: 'bold' },
-  headerTitle: { fontSize: 20, fontWeight: 'bold', marginLeft: '30%' },
+  // The title in the header.
+  headerTitle: { 
+    fontSize: 25, 
+    fontWeight: 'bold', 
+    marginLeft: '30%', 
+    color: '#ffffff', 
+    fontFamily: 'bebasNeue' },
   statusSection: { height: 120, paddingVertical: 10 },
   statusScroll: { paddingHorizontal: 15, alignItems: 'flex-end' },
   statusWrapper: { alignItems: 'center', marginHorizontal: 12, width: 70 },
   statusCircle: { 
-    width: 55, 
-    height: 55, 
-    borderRadius: 27.5, 
+    width: 63, 
+    height: 63, 
+    borderRadius: 30, 
     borderWidth: 3, 
     justifyContent: 'center', 
     alignItems: 'center', 
@@ -149,16 +155,18 @@ const styles = StyleSheet.create({
     position: 'absolute', 
     bottom: -6 
   },
-  
+
   // Subheader for the messages section.
   subHeader: { 
-    fontSize: 18, 
+    fontSize: 25, 
+    fontFamily: 'bebasNeue',
     fontWeight: 'bold', 
     paddingHorizontal: 20, 
     paddingVertical: 15, 
     borderTopWidth: 1, 
     borderBottomWidth: 1, 
-    borderColor: '#fefefe' 
+    borderColor: '#fefefe',
+    color: '#ffffff'
   },
   inboxArea: { flex: 1 },
 });
