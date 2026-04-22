@@ -80,7 +80,6 @@ export default function Page() {
        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
      >
 
-       // Header area that shows either "Status" or the name of the selected message.
        <View style={styles.header}>
          {!selectedMessage ? (
            <Text style={styles.headerTitle}>Status</Text>
@@ -101,7 +100,6 @@ export default function Page() {
          )}
        </View>
 
-         // Status section with circles and speech bubbles.
        {!selectedMessage && (
          <>
            <View style={styles.statusSection}>
@@ -145,7 +143,6 @@ export default function Page() {
          </>
        )}
 
-        // Inbox area that shows either the list of messages or the individual chat.
        {!selectedMessage ? (
          <ScrollView
            style={styles.inboxArea}
@@ -179,7 +176,6 @@ export default function Page() {
            ))}
          </ScrollView>
        ) : (
-         /* CHAT */
          <View style={styles.chatContainer}>
 
            <ScrollView
@@ -201,7 +197,6 @@ export default function Page() {
              ))}
            </ScrollView>
 
-           {/* 🔥 BIGGER INPUT AREA */}
            <View style={styles.inputBar}>
              <TextInput
                style={styles.input}
