@@ -1,8 +1,9 @@
 export interface ContentItem {
     id: string;
-    title: string;
+    title ? : string;
     posterUrl: any; // Adjust type as needed, e.g., string or ImageSourcePropType
     type: 'movie' | 'show';
+    genre: 'Action' | 'Thriller' | 'Romance' | 'Sci-Fi' | 'ChildrenAndFamily' | 'Anime';
     font: string;
 }
 

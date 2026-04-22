@@ -1,5 +1,6 @@
 import { View, Text, ScrollView, Image, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+import { Stack } from 'expo-router';
 
 const profileData: Record<string, { name: string; posters: any[] }> = {
   yani: {
@@ -41,15 +42,26 @@ export default function ProfileScreen() {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>{profile.name}'s List</Text>
+    <>
+      <Stack.Screen
+        options={{
+          headerStyle: { backgroundColor: '#000' },
+          headerTintColor: '#fff',
+          headerTitle: '',
+          headerShadowVisible: false,
+        }}
+      />
 
-      <View style={styles.grid}>
-        {profile.posters.map((poster, index) => (
-          <Image key={index} source={poster} style={styles.poster} />
-        ))}
-      </View>
-    </ScrollView>
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>{profile.name}'s List</Text>
+
+        <View style={styles.grid}>
+          {profile.posters.map((poster, index) => (
+            <Image key={index} source={poster} style={styles.poster} />
+          ))}
+        </View>
+      </ScrollView>
+    </>
   );
 }
 

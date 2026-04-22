@@ -26,9 +26,10 @@ export default function TabLayout() {
           position: 'absolute',
           left: 12,
           right: 12,
-          bottom: 12,
-          height: 64 + insets.bottom,
-          paddingBottom: insets.bottom > 0 ? insets.bottom : 10,
+          bottom: 0,
+
+          height: 60 + insets.bottom,
+          paddingBottom: insets.bottom,
           paddingTop: 10,
 
           backgroundColor: '#101010',
@@ -55,7 +56,7 @@ export default function TabLayout() {
           headerShown: false,
           title: '',
           tabBarIcon: ({ color }) => (
-            <Ionicons name="home" size={30} color={color} />
+            <Ionicons name="home-outline" size={30} color={color} />
           ),
         }}
       />
@@ -64,14 +65,8 @@ export default function TabLayout() {
         name="messages"
         options={{
           title: '',
-          tabBarIcon: ({ focused }) => (
-            <Image
-              source={require('../../assets/appLogo/Logo.png')}
-              style={{
-                width: 30,
-                height: 30,
-                tintColor: focused ? '#E50914' : '#888',
-              }}
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="chatbubble-outline" size={28} color={color}
             />
           ),
         }}
