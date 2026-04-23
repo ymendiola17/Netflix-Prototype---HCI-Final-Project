@@ -19,6 +19,8 @@ export default function RootLayout() {
         <StatusBar style='light' />
         <Stack screenOptions={{ contentStyle: { backgroundColor: '#000' } }}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="list/[id]" options={{  headerShown: false, }} />
+          <Stack.Screen name="profiles/[username]" options={{ headerShown: false }} />
         </Stack>
       </View>
     </UserListsProvider>

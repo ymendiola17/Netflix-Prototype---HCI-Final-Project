@@ -38,9 +38,14 @@ export default function ProfileScreen() {
 
       {/* Profile Picture */}
       <View style={styles.profileSection}>
-        <Image style={styles.profilePic} />
-        <Text style={styles.userName}>Username</Text>
+        <Image 
+        style={styles.profilePic} 
+        source={require('../../assets/ProfilePictures/profIslam.jpg')}
+        />
+        <Text style={styles.name}>Islam</Text>
+        <Text style={styles.userName}>@best_professor</Text>
       </View>
+
 
       {/*Tab Buttons*/}
       <View style={styles.tabRow}>
@@ -65,13 +70,13 @@ export default function ProfileScreen() {
       {/* My Picks Tab */}
       {activeTab === 'picks' && (
         <View>
-          <Text style={styles.sectionTitle}>Favorites</Text>
+          <Text style={styles.sectionTitle}>favorites</Text>
           {/* favorites content here */}
 
-          <Text style={styles.sectionTitle}>My Actors</Text>
+          <Text style={styles.sectionTitle}>my actors</Text>
           {/* actors content here */}
 
-          <Text style={styles.sectionTitle}>My Genres</Text>
+          <Text style={styles.sectionTitle}>my genres</Text>
           {/* genres content here */}
         </View>
       )}
@@ -108,12 +113,13 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#000', padding: 20 },
+  container: { flex: 1, backgroundColor: '#000', padding: 0 },
   header: { flexDirection: 'row', justifyContent: 'flex-end', padding: 20 },
   profileSection: { alignItems: 'center', marginBottom: 30 },
   profilePic: { borderWidth: 2, borderColor: '#E50914', width: 90, height: 90, borderRadius: 50 },
-  userName: { color: 'white', fontSize: 20, marginTop: 10 },
-  sectionTitle: { color: 'white', fontSize: 22, fontWeight: '600', marginBottom: 16, textAlign: 'center' },
+  name: { color: 'white', fontSize: 20, marginTop: 10 },
+  userName: { color: 'grey', fontSize: 15, marginTop: 5 },
+  sectionTitle: { color: '#c72c34', fontSize: 45, fontWeight: '900', marginBottom: 16, textAlign: 'center' },
   listRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -128,6 +134,7 @@ const styles = StyleSheet.create({
   alignItems: 'center',
   gap: 16,
   marginVertical: 20,
+  padding: 20,
 },
   tab: {
   borderWidth: 1,
@@ -159,17 +166,6 @@ const styles = StyleSheet.create({
       borderRadius: 20,
       paddingHorizontal: 12,
       paddingVertical: 4,
-  },
-  homeToggleActive: {
-    borderColor: '#E50914',
-    backgroundColor: '#1a0000',
-  },
-  homeToggleText: { color: 'white', fontSize: 12 },
-  createButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginTop: 24,
   },
   createButtonText: { color: '#E50914', fontSize: 16 },
   modalOverlay: {

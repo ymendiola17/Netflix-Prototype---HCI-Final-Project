@@ -4,13 +4,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useUserLists } from '../context/UserListContext';
 import { ListConfig } from '../types';
+import { Dimensions } from 'react-native';
 
 // --- List Cover: 4-Quadrant Grid ---
-function ListCover({ items, size = 140 }: { items: any[]; size?: number }) {
+function ListCover({ items, size = 195 }: { items: any[]; size?: number }) {
   const half = size / 2;
   const colors = ['#1a1a1a', '#2a2a2a', '#222', '#333'];
   return (
-    <View style={{ width: size, height: size, flexDirection: 'row', flexWrap: 'wrap', borderRadius: 12, overflow: 'hidden' }}>
+    <View style={{ width: size, height: size, flexDirection: 'row', flexWrap: 'wrap', borderRadius: 10, overflow: 'hidden' }}>
       {[0, 1, 2, 3].map(i => (
         <View key={i} style={{ width: half, height: half, backgroundColor: colors[i], alignItems: 'center', justifyContent: 'center' }}>
           {items[i] ? (
@@ -88,7 +89,7 @@ export function MyListsTab() {
                 renderItem={renderItem}
                 numColumns={2}
                 columnWrapperStyle={styles.columnWrapper}
-                scrollEnabled={false}
+                scrollEnabled={true}
             />
 
             {/* Add Button */}
@@ -129,9 +130,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 16,
+        paddingLeft: 20,
+        paddingRight: 20,
     },
     sectionTitle: { color: 'white', fontSize: 22, fontWeight: '600' },
-    columnWrapper: { justifyContent: 'center', gap: 10, marginBottom: 24 },
+    columnWrapper: { justifyContent: 'flex-start', gap: 12, marginBottom: 24 },
     listItem: { width: '47%', position: 'relative', paddingTop: 12 },
     deleteCircle: {
         position: 'absolute',
