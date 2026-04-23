@@ -3,13 +3,17 @@ import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useUserLists } from '../../context/UserListContext';
 import { MyListsTab } from '../../components/MyListsTab';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Link } from 'expo-router';
+import { useTheme } from '../../context/ThemeContext';
 
 export default function ProfileScreen() {
-  const { lists, addList, removeList, toggleHomeVisibility, toggleFavorite, removeItemFromList } = useUserLists();
+  const { lists, addList } = useUserLists();
+  const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState<'picks' | 'lists'>('picks');
   const [modalVisible, setModalVisible] = useState(false);
   const [newListName, setNewListName] = useState('');
+  const insets = useSafeAreaInsets();
 
   const handleCreateList = () => {
     if (!newListName.trim()) return;
@@ -19,7 +23,7 @@ export default function ProfileScreen() {
       type: 'custom',
       font: 'BebasNeue',
       order: lists.length,
-      visibleOnHome: false,  // off by default, user toggles it on
+      visibleOnHome: false,
       items: [],
     });
     setNewListName('');
@@ -27,36 +31,42 @@ export default function ProfileScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
 
       {/* Gear Icon */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => console.log('Settings Pressed')}>
-          <Ionicons name='settings-outline' size={28} color="white" />
-        </TouchableOpacity>
+      <View style={[styles.header, { paddingTop: insets.top }]}>
+        <Link href="/settings" asChild>
+          <TouchableOpacity>
+            <Ionicons name='settings-outline' size={28} color={theme.text} />
+          </TouchableOpacity>
+        </Link>
       </View>
 
       {/* Profile Picture */}
       <View style={styles.profileSection}>
-        <Image style={styles.profilePic} />
-        <Text style={styles.userName}>Username</Text>
+        <Image
+          style={[styles.profilePic, { borderColor: theme.accent }]}
+          source={require('../../assets/ProfilePictures/profIslam.jpg')}
+        />
+        <Text style={[styles.name, { color: theme.text }]}>Islam</Text>
+        <Text style={[styles.userName, { color: theme.subtext }]}>@best_professor</Text>
       </View>
 
-      {/*Tab Buttons*/}
+      {/* Tab Buttons */}
       <View style={styles.tabRow}>
         <TouchableOpacity
-          style={[styles.tab, activeTab === 'picks' && styles.activeTab]}
+          style={[styles.tab, { borderColor: theme.subtext }, activeTab === 'picks' && { borderColor: theme.accent, backgroundColor: '#1a0000' }]}
           onPress={() => setActiveTab('picks')}
         >
-          <Text style={[styles.tabText, activeTab === 'picks' && styles.activeTabText]}>
+          <Text style={[styles.tabText, { color: theme.subtext }, activeTab === 'picks' && { color: theme.text }]}>
             My Picks
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.tab, activeTab === 'lists' && styles.activeTab]}
+          style={[styles.tab, { borderColor: theme.subtext }, activeTab === 'lists' && { borderColor: theme.accent, backgroundColor: '#1a0000' }]}
           onPress={() => setActiveTab('lists')}
         >
-          <Text style={[styles.tabText, activeTab === 'lists' && styles.activeTabText]}>
+          <Text style={[styles.tabText, { color: theme.subtext }, activeTab === 'lists' && { color: theme.text }]}>
             My Lists
           </Text>
         </TouchableOpacity>
@@ -65,38 +75,33 @@ export default function ProfileScreen() {
       {/* My Picks Tab */}
       {activeTab === 'picks' && (
         <View>
-          <Text style={styles.sectionTitle}>Favorites</Text>
-          {/* favorites content here */}
-
-          <Text style={styles.sectionTitle}>My Actors</Text>
-          {/* actors content here */}
-
-          <Text style={styles.sectionTitle}>My Genres</Text>
-          {/* genres content here */}
+          <Text style={[styles.sectionTitle, { color: theme.accent }]}>Favorites</Text>
+          <Text style={[styles.sectionTitle, { color: theme.accent }]}>My Actors</Text>
+          <Text style={[styles.sectionTitle, { color: theme.accent }]}>My Genres</Text>
         </View>
       )}
 
       {/* My Lists Tab */}
       {activeTab === 'lists' && <MyListsTab />}
-        
-      {/* Modal for naming the new list */}
+
+      {/* Modal */}
       <Modal visible={modalVisible} transparent animationType="fade">
         <View style={styles.modalOverlay}>
-          <View style={styles.modalBox}>
-            <Text style={styles.modalTitle}>New List</Text>
+          <View style={[styles.modalBox, { backgroundColor: theme.surface }]}>
+            <Text style={[styles.modalTitle, { color: theme.text }]}>New List</Text>
             <TextInput
-              style={styles.input}
+              style={[styles.input, { color: theme.text, borderColor: theme.subtext }]}
               placeholder="List name..."
-              placeholderTextColor="#888"
+              placeholderTextColor={theme.subtext}
               value={newListName}
               onChangeText={setNewListName}
             />
             <View style={styles.modalButtons}>
               <TouchableOpacity onPress={() => setModalVisible(false)}>
-                <Text style={styles.cancelText}>Cancel</Text>
+                <Text style={[styles.cancelText, { color: theme.subtext }]}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleCreateList}>
-                <Text style={styles.createText}>Create</Text>
+                <Text style={[styles.createText, { color: theme.accent }]}>Create</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -108,93 +113,46 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#000', padding: 20 },
+  container: { flex: 1, padding: 0 },
   header: { flexDirection: 'row', justifyContent: 'flex-end', padding: 20 },
   profileSection: { alignItems: 'center', marginBottom: 30 },
-  profilePic: { borderWidth: 2, borderColor: '#E50914', width: 90, height: 90, borderRadius: 50 },
-  userName: { color: 'white', fontSize: 20, marginTop: 10 },
-  sectionTitle: { color: 'white', fontSize: 22, fontWeight: '600', marginBottom: 16, textAlign: 'center' },
+  profilePic: { borderWidth: 2, width: 90, height: 90, borderRadius: 50 },
+  name: { fontSize: 20, marginTop: 10 },
+  userName: { fontSize: 15, marginTop: 5 },
+  sectionTitle: { fontSize: 45, fontWeight: '900', marginBottom: 16, textAlign: 'center' },
+  tabRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 16,
+    marginVertical: 20,
+    padding: 20,
+  },
+  tab: {
+    borderWidth: 1,
+    width: '45%',
+    height: 36,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tabText: { fontSize: 14 },
   listRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 14,
     borderWidth: 0.5,
-    borderColor: '#222',
   },
-  tabRow: {
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
-  gap: 16,
-  marginVertical: 20,
-},
-  tab: {
-  borderWidth: 1,
-  borderColor: '#555',
-  width: '45%',
-  height: 36,
-  borderRadius: 20,
-  alignItems: 'center',
-  justifyContent: 'center',
-  },
-  activeTab: {
-    borderColor: '#E50914',
-    backgroundColor: '#1a0000',
-  },
-  tabText: {
-    color: '#888',
-    fontSize: 14,
-  },
-  activeTabText: {
-    color: 'white',
-    fontWeight: '600',
-  },
-  
-    listName: { color: 'white', fontSize: 16 },
-    listActions: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-    homeToggle: {
-      borderWidth: 1,
-      borderColor: '#555',
-      borderRadius: 20,
-      paddingHorizontal: 12,
-      paddingVertical: 4,
-  },
-  homeToggleActive: {
-    borderColor: '#E50914',
-    backgroundColor: '#1a0000',
-  },
-  homeToggleText: { color: 'white', fontSize: 12 },
-  createButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginTop: 24,
-  },
-  createButtonText: { color: '#E50914', fontSize: 16 },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.8)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalBox: {
-    backgroundColor: '#1a1a1a',
-    borderRadius: 12,
-    padding: 24,
-    width: '80%',
-  },
-  modalTitle: { color: 'white', fontSize: 18, fontWeight: '600', marginBottom: 16 },
-  input: {
-    borderWidth: 0.5,
-    borderColor: '#555',
-    borderRadius: 8,
-    padding: 10,
-    color: 'white',
-    fontSize: 16,
-    marginBottom: 20,
-  },
+  listName: { fontSize: 16 },
+  listActions: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  homeToggle: { borderWidth: 1, borderRadius: 20, paddingHorizontal: 12, paddingVertical: 4 },
+  createButtonText: { fontSize: 16 },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.8)', justifyContent: 'center', alignItems: 'center' },
+  modalBox: { borderRadius: 12, padding: 24, width: '80%' },
+  modalTitle: { fontSize: 18, fontWeight: '600', marginBottom: 16 },
+  input: { borderWidth: 0.5, borderRadius: 8, padding: 10, fontSize: 16, marginBottom: 20 },
   modalButtons: { flexDirection: 'row', justifyContent: 'flex-end', gap: 20 },
-  cancelText: { color: '#888', fontSize: 16 },
-  createText: { color: '#E50914', fontSize: 16, fontWeight: '600' },
+  cancelText: { fontSize: 16 },
+  createText: { fontSize: 16, fontWeight: '600' },
 });

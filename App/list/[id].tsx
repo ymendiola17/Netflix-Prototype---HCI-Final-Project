@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 16,
-    paddingTop: 10,
+    paddingTop: 70,
   },
   coverSection: { alignItems: 'center', marginBottom: 24, gap: 10 },
   listTitle: { color: 'white', fontSize: 22, fontWeight: '700' },

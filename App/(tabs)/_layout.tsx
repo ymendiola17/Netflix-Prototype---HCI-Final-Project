@@ -11,10 +11,11 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: true,
         headerStyle: {
-          backgroundColor: '#101010',
+          backgroundColor: '#000000',
           borderBottomWidth: 0,
           shadowOpacity: 0,
           elevation: 0,
+          height: 50,
         },
         headerShadowVisible: false,
 
@@ -64,6 +65,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="messages"
         options={{
+          headerShown: false,
           title: '',
           tabBarIcon: ({ color }) => (
             <Ionicons name="chatbubble-outline" size={28} color={color}
@@ -74,7 +76,9 @@ export default function TabLayout() {
 
       <Tabs.Screen
         name="profile"
+        
         options={{
+          headerShown: false,
           title: '',
           tabBarIcon: ({ focused }) => (
             <Image
