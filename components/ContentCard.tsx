@@ -43,6 +43,7 @@ export default function ContentCard({
           </TouchableOpacity>
         </View>
       )}
+      
 
       {/* Fullscreen video modal */}
       <Modal

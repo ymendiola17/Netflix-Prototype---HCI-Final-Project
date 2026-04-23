@@ -24,6 +24,7 @@ export default function RootLayout() {
           <Stack.Screen name="list/[id]" options={{  headerShown: false, }} />
           <Stack.Screen name="profiles/[username]" options={{ headerShown: false }} />
           <Stack.Screen name="settings" options={{ headerShown: false}} />
+          <Stack.Screen name="moviesdescription" options={{ headerShown: false}} />
         </Stack>
       </View>
       </ThemeProvider>
