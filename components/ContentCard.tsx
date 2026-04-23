@@ -1,12 +1,11 @@
-import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Image, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { ContentItem } from '../types';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { Video, ResizeMode } from 'expo-av';
 import { useState } from 'react';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
-
-const [showVideo, setShowVideo] = useState(false);
 export default function ContentCard({
   item,
   showActions = false,
@@ -14,6 +13,19 @@ export default function ContentCard({
   item: ContentItem;
   showActions?: boolean;
 }) {
+  const [showVideo, setShowVideo] = useState(false);
+
+  const openVideo = async () => {
+    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+    setShowVideo(true);
+  };
+
+  const closeVideo = async () => {
+    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+    setShowVideo(false);
+    router.back;
+  };
+
   return (
     <View style={styles.card}>
       <TouchableOpacity onPress={() => router.push('/moviesdescription')}>
@@ -22,26 +34,41 @@ export default function ContentCard({
 
       {showActions && (
         <View style={styles.actions}>
-          <TouchableOpacity style={styles.playButton}
-            onPress={() => setShowVideo(true)}>
+          <TouchableOpacity style={styles.playButton} onPress={openVideo}>
             <Ionicons name="play" size={16} color="white" />
           </TouchableOpacity>
-
-          {showVideo && (
-            <Video
-              source={require('../assets/movieFile/movie.mp4')} // Placeholder video URL
-              style={{ width: 300, height: 200 }}
-              useNativeControls
-              resizeMode={ResizeMode.CONTAIN}
-              isLooping
-            />
-          )}
 
           <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/moviesdescription')}>
             <Ionicons name="information-circle-outline" size={20} color="white" />
           </TouchableOpacity>
         </View>
       )}
+
+      {/* Fullscreen video modal */}
+      <Modal
+        visible={showVideo}
+        animationType="slide"
+        onRequestClose={closeVideo}
+        supportedOrientations={['landscape']}
+      >
+        <View style={{ flex: 1, backgroundColor: '#000' }}>
+          <TouchableOpacity
+            onPress={closeVideo}
+            style={{ position: 'absolute', top: 16, left: 16, zIndex: 10 }}
+          >
+            <Ionicons name="close" size={28} color="white" />
+          </TouchableOpacity>
+
+          <Video
+            source={require('../assets/movieFile/movie.mp4')}
+            style={{ flex: 1 }}
+            useNativeControls
+            resizeMode={ResizeMode.CONTAIN}
+            isLooping
+            shouldPlay
+          />
+        </View>
+      </Modal>
     </View>
   );
 }
