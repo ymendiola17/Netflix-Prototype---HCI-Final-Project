@@ -16,6 +16,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import * as DocumentPicker from 'expo-document-picker';
 import { useTheme } from '../../context/ThemeContext';
+import { Ionicons } from '@expo/vector-icons';
 
 type Message = {
   id: string;
@@ -37,17 +38,17 @@ export default function Page() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
 
-  const [myStatus, setMyStatus] = useState(' ');
+  const [myStatus, setMyStatus] = useState('');
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [replyText, setReplyText] = useState('');
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
 
   const statusUsers = [
-    { name: 'You', status: myStatus, avatar: require('../../assets/ProfilePictures/yani.jpeg') },
-    { name: 'Kamy', status: 'Happy!', avatar: require('../../assets/ProfilePictures/kamy.jpg') },
-    { name: 'Isaiah', status: 'Sad :(', avatar: require('../../assets/ProfilePictures/isaiah.jpg') },
-    { name: 'Amber', status: 'Eh', avatar: require('../../assets/ProfilePictures/amber.jpg') },
-    { name: 'Yani', status: 'ss3!!!', avatar: require('../../assets/ProfilePictures/yani.jpeg') },
+    { name: 'You', status: myStatus, avatar: require('../../assets/ProfilePictures/profIslam.jpg'), isMe: true },
+    { name: 'Kamy', status: 'Happy!', avatar: require('../../assets/ProfilePictures/kamy.jpg'), isMe: false },
+    { name: 'Isaiah', status: 'Sad :(', avatar: require('../../assets/ProfilePictures/isaiah.jpg'), isMe: false },
+    { name: 'Amber', status: 'Eh', avatar: require('../../assets/ProfilePictures/amber.jpg'), isMe: false },
+    { name: 'Yani', status: 'ss3!!!', avatar: require('../../assets/ProfilePictures/yani.jpeg'), isMe: false },
   ];
 
   const [messages, setMessages] = useState<Message[]>([
@@ -60,7 +61,7 @@ export default function Page() {
   const updateMyStatus = () => {
     if (Platform.OS === 'ios') {
       Alert.prompt('Update Status', 'Your thoughts go here...', (val) => {
-        setMyStatus(val || ' ');
+        setMyStatus(val || '');
       });
     } else {
       const text = prompt('Your thoughts go here...');
@@ -94,14 +95,29 @@ export default function Page() {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
-      >
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+          >
         {/* Header */}
-        <View style={[styles.header, { backgroundColor: theme.background }]}>
+        <View style={[styles.header, { backgroundColor: theme.background, paddingTop: insets.top }]}>
+          {!selectedMessage ? (
             <Text style={[styles.headerTitle, { color: theme.text }]}>Status</Text>
+          ) : (
+            <View style={styles.chatHeader}>
+              <TouchableOpacity
+                onPress={() => { setSelectedMessage(null); setChatMessages([]); }}
+                style={styles.backButtonContainer}
+              >
+                <Ionicons name="chevron-back" size={24} color={theme.accent} />
+              </TouchableOpacity>
+              <Text style={[styles.headerTitle, styles.chatTitle, { color: theme.text }]}>
+                {selectedMessage.name}
+              </Text>
+              <View style={styles.headerSpacer} />
+            </View>
+          )}
         </View>
 
         {/* Status row */}
@@ -111,19 +127,29 @@ export default function Page() {
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.statusScroll}>
                 {statusUsers.map((user, index) => (
                   <View key={index} style={styles.statusWrapper}>
-                    <View style={[styles.cloudBubble, { opacity: user.status.trim().length > 0 ? 1 : 0 }]}>
-                      <Text style={styles.cloudText} numberOfLines={1}>{user.status}</Text>
+
+                    {user.isMe ? (
+                      <TouchableOpacity
+                        style={[styles.cloudBubble, { opacity: 1 }]}
+                        onPress={updateMyStatus}
+                      >
+                        {myStatus.trim().length > 0 ? (
+                          <Text style={styles.cloudText} numberOfLines={1}>{myStatus}</Text>
+                        ) : (
+                          <Text style={[styles.cloudText, { fontSize: 14, fontWeight: 'bold' }]}>+</Text>
+                        )}
+                      </TouchableOpacity>
+                    ) : (
+                      <View style={[styles.cloudBubble, { opacity: user.status.trim().length > 0 ? 1 : 0 }]}>
+                        <Text style={styles.cloudText} numberOfLines={1}>{user.status}</Text>
+                      </View>
+                    )}
+
+                    <View style={[styles.statusCircle, { borderColor: theme.accent }]}>
+                      <Image source={user.avatar} style={styles.statusAvatarImage} />
                     </View>
-                    <TouchableOpacity
-                      style={[styles.statusCircle, { borderColor: theme.accent }]}
-                      onPress={index === 0 ? updateMyStatus : undefined}
-                    >
-                      {index === 0 && user.status.trim().length === 0 ? (
-                        <Text style={{ fontSize: 24, color: theme.text }}>+</Text>
-                      ) : (
-                        <Image source={user.avatar} style={styles.statusAvatarImage} />
-                      )}
-                    </TouchableOpacity>
+
+                    <Text style={[styles.statusName, { color: theme.subtext }]}>{user.name}</Text>
                   </View>
                 ))}
               </ScrollView>
@@ -132,7 +158,6 @@ export default function Page() {
           </>
         )}
 
-        {/* Message list or chat */}
         {!selectedMessage ? (
           <ScrollView style={styles.inboxArea} keyboardShouldPersistTaps="handled">
             {messages.map((msg) => (
@@ -159,7 +184,11 @@ export default function Page() {
           </ScrollView>
         ) : (
           <View style={styles.chatContainer}>
-            <ScrollView style={styles.inboxArea} contentContainerStyle={{ padding: 10, flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+            <ScrollView
+              style={styles.inboxArea}
+              contentContainerStyle={{ padding: 10, flexGrow: 1 }}
+              keyboardShouldPersistTaps="handled"
+            >
               {chatMessages.map((msg) => (
                 <View
                   key={msg.id}
@@ -173,7 +202,7 @@ export default function Page() {
               ))}
             </ScrollView>
 
-            <View style={[styles.inputBar, { borderTopColor: theme.surface }]}>
+            <View style={[styles.inputBar, { borderTopColor: theme.surface, paddingBottom: insets.bottom + 14 }]}>
               <TouchableOpacity style={[styles.plusButton, { backgroundColor: theme.surface }]} onPress={pickMovieFile}>
                 <Text style={[styles.plusText, { color: theme.text }]}>+</Text>
               </TouchableOpacity>
@@ -195,23 +224,37 @@ export default function Page() {
   );
 }
 
-const getBorderColor = (index: number) => {
-  const colors = ['white'];
-  return colors[index % colors.length];
-};
-
 const styles = StyleSheet.create({
   container: { flex: 1 },
   chatContainer: { flex: 1, justifyContent: 'space-between', paddingBottom: Platform.OS === 'ios' ? 25 : 15 },
-  header: { justifyContent: 'center', alignItems: 'center', padding: 30 },
-  chatHeader: { width: '100%' },
-  headerTitle: { fontSize: 25, fontWeight: 'bold', textAlign: 'center' },
-  statusSection: { height: 145, paddingBottom: 10 },
+  header: { justifyContent: 'center', alignItems: 'center', padding: 10 },
+  chatHeader: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 4,
+  },
+  backButtonContainer: {
+    width: 40,
+    alignItems: 'flex-start',
+  },
+  headerSpacer: {
+    width: 40,
+  },
+  chatTitle: {
+    flex: 1,
+    textAlign: 'center',
+  },
+  backButton: { fontSize: 18 },
+  headerTitle: { fontSize: 20, fontWeight: 'bold', textAlign: 'center' },
+  statusSection: { height: 155, paddingTop: 10, paddingBottom: 10 },
   statusScroll: { paddingHorizontal: 15, paddingBottom: 10 },
   statusWrapper: { alignItems: 'center', marginHorizontal: 12, width: 70, paddingBottom: 5 },
   statusCircle: { width: 70, height: 70, borderRadius: 75, borderWidth: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', overflow: 'hidden' },
   statusAvatarImage: { width: '100%', height: '100%' },
-  cloudBubble: { backgroundColor: '#d0cccc', padding: 10, borderRadius: 15, marginBottom: 8, minHeight: 24 },
+  statusName: { fontSize: 11, marginTop: 4 },
+  cloudBubble: { backgroundColor: '#d0cccc', paddingHorizontal: 10, paddingVertical: 6, borderRadius: 15, marginBottom: 8, minHeight: 24, alignItems: 'center', justifyContent: 'center' },
   cloudText: { fontSize: 10 },
   subHeader: { fontSize: 25, fontWeight: 'bold', paddingHorizontal: 20, paddingVertical: 15 },
   inboxArea: { flex: 1 },
@@ -225,7 +268,7 @@ const styles = StyleSheet.create({
   incomingBubble: { padding: 16, borderRadius: 18, marginVertical: 6, alignSelf: 'flex-start', maxWidth: '85%' },
   outgoingBubble: { padding: 16, borderRadius: 18, marginVertical: 6, alignSelf: 'flex-end', maxWidth: '85%' },
   messageText: { fontSize: 16 },
-  inputBar: { flexDirection: 'row', paddingHorizontal: 12, paddingVertical: 14, paddingBottom: Platform.OS === 'ios' ? 50 : 20, borderTopWidth: 1, alignItems: 'center', gap: 8 },
+  inputBar: { flexDirection: 'row', paddingHorizontal: 12, paddingVertical: 14, borderTopWidth: 1, alignItems: 'center', gap: 8 },
   input: { flex: 1, borderRadius: 24, paddingHorizontal: 16, paddingVertical: 12, fontSize: 16 },
   plusButton: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
   plusText: { fontSize: 22, fontWeight: 'bold' },
