@@ -17,7 +17,7 @@ export default function ContentRow({ title, items }: Props) {
         renderItem={({ item }) => (
           <ContentCard
             item={item}
-            showActions={title === 'My List'}
+            showActions={title === 'Keep Watching'}
           />
         )}
         horizontal
