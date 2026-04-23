@@ -4,6 +4,7 @@ import { Slot, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { UserListsProvider } from '../context/UserListContext';
 import { useFonts } from 'expo-font';
+import { ThemeProvider } from '../context/ThemeContext';
 
 
 export default function RootLayout() {
@@ -15,6 +16,7 @@ export default function RootLayout() {
 
   return (
     <UserListsProvider>
+      <ThemeProvider>
       <View style={{ flex: 1, backgroundColor: '#000' }}>
         <StatusBar style='light' />
         <Stack screenOptions={{ contentStyle: { backgroundColor: '#000' } }}>
@@ -23,6 +25,7 @@ export default function RootLayout() {
           <Stack.Screen name="profiles/[username]" options={{ headerShown: false }} />
         </Stack>
       </View>
+      </ThemeProvider>
     </UserListsProvider>
   );
 }

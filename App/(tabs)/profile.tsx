@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useUserLists } from '../../context/UserListContext';
 import { MyListsTab } from '../../components/MyListsTab';
+import { useRouter } from 'expo-router';
 
 
 export default function ProfileScreen() {
@@ -10,6 +11,7 @@ export default function ProfileScreen() {
   const [activeTab, setActiveTab] = useState<'picks' | 'lists'>('picks');
   const [modalVisible, setModalVisible] = useState(false);
   const [newListName, setNewListName] = useState('');
+  const router = useRouter();
 
   const handleCreateList = () => {
     if (!newListName.trim()) return;
@@ -31,7 +33,7 @@ export default function ProfileScreen() {
 
       {/* Gear Icon */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => console.log('Settings Pressed')}>
+        <TouchableOpacity onPress={() => router.push('/settings')}>
           <Ionicons name='settings-outline' size={28} color="white" />
         </TouchableOpacity>
       </View>
