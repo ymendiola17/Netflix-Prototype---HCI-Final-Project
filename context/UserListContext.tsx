@@ -35,8 +35,15 @@ export function UserListsProvider({ children }: { children: React.ReactNode }) {
     { id: '8', title: 'Weightlifting Fairy Kuroko', posterUrl: require('../assets/posters/Genre/Romance/WeightliftingFairy.webp'), type: 'movie', font: 'BebasNeue', genre: 'Romance' },
   ]},
   { id: 'Top 10 in the US', title: 'Top 10 in the US', type: 'category', font: 'BebasNeue', order: 1, visibleOnHome: true, items: [
-    { id: '9', title: 'Anonymously Yours', posterUrl: require('../assets/posters/Genre/Romance/AnonymouslyYours.webp'), type: 'movie', font: 'BebasNeue', genre: 'Romance' },
-    { id: '10', title: 'We Bare Bears', posterUrl: require('../assets/posters/Genre/ChildrenAndFamily/WeBareBears.webp'), type: 'show', font: 'BebasNeue', genre: 'ChildrenAndFamily' },
+    { id: 't1', title: 'Pavane', posterUrl: require('../assets/posters/Genre/Kdramas/Pavane.webp'), type: 'movie', font: 'BebasNeue', genre: 'Romance' },
+    { id: 't2', title: 'The Witch pt 2', posterUrl: require('../assets/posters/Genre/Kdramas/TheWitchpt2.webp'), type: 'show', font: 'BebasNeue', genre: 'Action' },
+    { id: 't3', title: 'Weak Hero', posterUrl: require('../assets/posters/Genre/Action/WeakHero.webp'), type: 'show', font: 'BebasNeue', genre: 'Action' },
+    { id: 't4', title: 'The Gardener', posterUrl: require('../assets/posters/Genre/Crime/TheGardener.webp'), type: 'show', font: 'BebasNeue', genre: 'Thriller' }, 
+    { id: 't5', title: 'Love Untangled', posterUrl: require('../assets/posters/Genre/Kdramas/LoveUntangled.webp'), type: 'show', font: 'BebasNeue', genre: 'Romance' },
+    { id: 't6', title: 'Twilight', posterUrl: require('../assets/posters/Genre/Romance/twilight.webp'), type: 'show', font: 'BebasNeue', genre: 'Romance' },
+    { id: 't7', title: 'Hail Mary', posterUrl: require('../assets/posters/Genre/Sci-fi/HailMary.webp'), type: 'show', font: 'BebasNeue', genre: 'Sci-Fi' },
+    { id: 't8', title: 'The Rain', posterUrl: require('../assets/posters/Genre/Sci-fi/TheRain.webp'), type: 'show', font: 'BebasNeue', genre: 'Sci-Fi' },   
+
   ]},
   { id: 'Romance', title: 'Romance', type: 'category', font: 'BebasNeue', order: 1, visibleOnHome: true, items: [
     { id: '11', title: 'Anonymously Yours', posterUrl: require('../assets/posters/Genre/Romance/AnonymouslyYours.webp'), type: 'movie', font: 'BebasNeue', genre: 'Romance' },
