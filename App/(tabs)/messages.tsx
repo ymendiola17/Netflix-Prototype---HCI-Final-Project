@@ -100,20 +100,8 @@ export default function Page() {
         keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
       >
         {/* Header */}
-        <View style={[styles.header, { backgroundColor: theme.background }, { paddingTop: insets.top }]}>
-          {!selectedMessage ? (
+        <View style={[styles.header, { backgroundColor: theme.background }]}>
             <Text style={[styles.headerTitle, { color: theme.text }]}>Status</Text>
-          ) : (
-            <View style={styles.chatHeader}>
-              <TouchableOpacity
-                onPress={() => { setSelectedMessage(null); setChatMessages([]); }}
-                style={styles.backButtonContainer}
-              >
-                <Text style={[styles.backButton, { color: theme.accent }]}>{'< Back'}</Text>
-              </TouchableOpacity>
-              <Text style={[styles.headerTitle, { color: theme.text }]}>{selectedMessage.name}</Text>
-            </View>
-          )}
         </View>
 
         {/* Status row */}
@@ -215,12 +203,10 @@ const getBorderColor = (index: number) => {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   chatContainer: { flex: 1, justifyContent: 'space-between', paddingBottom: Platform.OS === 'ios' ? 25 : 15 },
-  header: { justifyContent: 'center', alignItems: 'center', padding: 10 },
+  header: { justifyContent: 'center', alignItems: 'center', padding: 30 },
   chatHeader: { width: '100%' },
-  backButtonContainer: { alignSelf: 'flex-start', marginBottom: 5 },
-  backButton: { fontSize: 18 },
   headerTitle: { fontSize: 25, fontWeight: 'bold', textAlign: 'center' },
-  statusSection: { height: 145, paddingTop: 10, paddingBottom: 10 },
+  statusSection: { height: 145, paddingBottom: 10 },
   statusScroll: { paddingHorizontal: 15, paddingBottom: 10 },
   statusWrapper: { alignItems: 'center', marginHorizontal: 12, width: 70, paddingBottom: 5 },
   statusCircle: { width: 70, height: 70, borderRadius: 75, borderWidth: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', overflow: 'hidden' },

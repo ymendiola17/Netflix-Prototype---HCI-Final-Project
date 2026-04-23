@@ -156,12 +156,7 @@ export default function HomeScreen() {
                       <Text style={[styles.optionText, { color: theme.text }]}>
                         {list.title}
                       </Text>
-                      <Ionicons
-                        name={isVisible ? 'eye' : 'eye-off-outline'}
-                        size={18}
-                        color={isVisible ? theme.accent : theme.subtext}
-                        style={{ marginLeft: 'auto' }}
-                      />
+                      
                     </TouchableOpacity>
                   );
                 })}
