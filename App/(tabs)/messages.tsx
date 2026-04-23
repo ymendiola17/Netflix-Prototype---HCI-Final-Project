@@ -12,6 +12,7 @@ import {
  SafeAreaView
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import * as DocumentPicker from 'expo-document-picker';
 
 // Structure for messages.
 type Message = {
@@ -19,6 +20,7 @@ type Message = {
  name: string;
  text: string;
  time: string;
+ unread?: boolean;
 };
 
 // Structure for individual chat messages.
@@ -30,16 +32,18 @@ type ChatMessage = {
 
 export default function Page() {
  const navigation = useNavigation();
-// State for user's status and messages.
+
+ // State for user's status and messages.
  const [myStatus, setMyStatus] = useState(' ');
  const fixedStatuses = ['Happy!', 'Sad :(', 'Eh'];
  const allStatuses = [myStatus, ...fixedStatuses];
 
  // Sample messages for the inbox.
- const [messages] = useState<Message[]>([
-   { id: '1', name: 'Yani', text: 'Hey! What movie are you watching?', time: '2m' },
-   { id: '2', name: 'Kamy', text: 'Hi, how are you? Do you have any show recommendations?', time: '1h' },
+ const [messages, setMessages] = useState<Message[]>([
+   { id: '1', name: 'Yani', text: 'Hey! What movie are you watching?', time: '2m', unread: true },
+   { id: '2', name: 'Kamy', text: 'Hi, how are you? Do you have any show recommendations?', time: '1h', unread: true },
    { id: '3', name: 'Isaiah', text: 'Hey, I see you are watching a movie. How do you like it?', time: '3h' },
+   { id: '4', name: 'Amber', text: 'Hello! I just watched a great show. Want to chat about it?', time: '5h' },
  ]);
 
  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
@@ -70,6 +74,45 @@ export default function Page() {
    ]);
 
    setReplyText('');
+ };
+
+ // +++++ Movie / file upload
+ const pickMovieFile = async () => {
+   try {
+     const result = await DocumentPicker.getDocumentAsync({
+       type: 'video/*',
+       copyToCacheDirectory: true,
+     });
+
+     if (!result.canceled) {
+       const file = result.assets[0];
+
+       setChatMessages(prev => [
+         ...prev,
+         {
+           id: Date.now().toString(),
+           text: `🎬 Movie uploaded: ${file.name}`,
+           sender: 'me'
+         }
+       ]);
+     }
+   } catch (err) {
+     console.log('File pick error:', err);
+   }
+ };
+
+ // ✅ NEW: open message + remove unread badge
+ const openMessage = (msg: Message) => {
+   setMessages(prev =>
+     prev.map(m =>
+       m.id === msg.id ? { ...m, unread: false } : m
+     )
+   );
+
+   setSelectedMessage(msg);
+   setChatMessages([
+     { id: 'init', text: msg.text, sender: 'them' }
+   ]);
  };
 
  return (
@@ -152,22 +195,22 @@ export default function Page() {
              <TouchableOpacity
                key={msg.id}
                style={styles.msgRow}
-               onPress={() => {
-                 setSelectedMessage(msg);
-                 setChatMessages([
-                   { id: 'init', text: msg.text, sender: 'them' }
-                 ]);
-               }}
+               onPress={() => openMessage(msg)}
              >
                <View style={styles.msgAvatar}>
                  <Text style={{ fontSize: 20 }}>👤</Text>
                </View>
 
                <View style={styles.msgContent}>
-                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
                    <Text style={styles.msgName}>{msg.name}</Text>
-                   <Text style={styles.msgTime}>{msg.time}</Text>
+
+                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                     <Text style={styles.msgTime}>{msg.time}</Text>
+                     {msg.unread && <View style={styles.unreadBadge} />}
+                   </View>
                  </View>
+
                  <Text style={styles.msgSnippet} numberOfLines={1}>
                    {msg.text}
                  </Text>
@@ -197,19 +240,33 @@ export default function Page() {
              ))}
            </ScrollView>
 
+           {/* Message bar at the bottom of individual messages. */}
            <View style={styles.inputBar}>
+
+             {/* + button moved to LEFT */}
+             <TouchableOpacity
+               style={styles.plusButton}
+               onPress={pickMovieFile}
+             >
+               <Text style={styles.plusText}>+</Text>
+             </TouchableOpacity>
+
              <TextInput
                style={styles.input}
                value={replyText}
                onChangeText={setReplyText}
                placeholder="Message..."
                placeholderTextColor="#aaa"
-               multiline={false}
              />
 
-             <TouchableOpacity style={styles.sendButtonContainer} onPress={sendMessage}>
+             {/* Send button on individual messages. */}
+             <TouchableOpacity
+               style={styles.sendButtonContainer}
+               onPress={sendMessage}
+             >
                <Text style={styles.sendButton}>Send</Text>
              </TouchableOpacity>
+
            </View>
 
          </View>
@@ -241,7 +298,8 @@ const styles = StyleSheet.create({
  header: {
    justifyContent: 'center',
    alignItems: 'center',
-   padding: 10
+   padding: 10,
+   backgroundColor: '#000'
  },
 
  chatHeader: {
@@ -258,7 +316,6 @@ const styles = StyleSheet.create({
    fontSize: 18
  },
 
- // Main header title for both status and chat.
  headerTitle: {
    fontSize: 25,
    fontWeight: 'bold',
@@ -266,7 +323,6 @@ const styles = StyleSheet.create({
    textAlign: 'center'
  },
 
- // Status section at the top of the messages tab.
  statusSection: {
    height: 145,
    paddingTop: 10,
@@ -306,7 +362,6 @@ const styles = StyleSheet.create({
  cloudText: { fontSize: 10 },
  cloudTail: {},
 
- // Subheader for "My Messages" section.
  subHeader: {
    fontSize: 25,
    fontWeight: 'bold',
@@ -315,10 +370,8 @@ const styles = StyleSheet.create({
    color: '#fff'
  },
 
- // Inbox area for messages list and individual chat.
  inboxArea: { flex: 1 },
 
- // Each message row in the inbox.
  msgRow: {
    flexDirection: 'row',
    padding: 15,
@@ -326,7 +379,6 @@ const styles = StyleSheet.create({
    borderColor: '#222'
  },
 
- // Avatar for each message in the inbox.
  msgAvatar: {
    width: 50,
    height: 50,
@@ -337,13 +389,27 @@ const styles = StyleSheet.create({
    marginRight: 15
  },
 
- // Content area for each message in the inbox.
- msgContent: { flex: 1 },
- msgName: { color: '#fff', fontWeight: 'bold' },
- msgTime: { color: '#666', fontSize: 12 },
- msgSnippet: { color: '#aaa' },
+ msgContent: {
+   flex: 1,
+   justifyContent: 'center'
+ },
 
- // Bubbles for incoming and outgoing messages in the chat.
+ msgName: {
+   color: '#fff',
+   fontWeight: 'bold'
+ },
+
+ msgTime: {
+   color: '#666',
+   fontSize: 12
+ },
+
+ msgSnippet: {
+   color: '#aaa',
+   marginTop: 2,
+   lineHeight: 18
+ },
+
  incomingBubble: {
    backgroundColor: '#2c2c2e',
    padding: 16,
@@ -367,14 +433,14 @@ const styles = StyleSheet.create({
    fontSize: 16
  },
 
-// Message bar at the bottom of individual messages.
  inputBar: {
    flexDirection: 'row',
    paddingHorizontal: 12,
    paddingVertical: 14,
    paddingBottom: Platform.OS === 'ios' ? 50 : 20,
    borderTopWidth: 1,
-   alignItems: 'center'
+   alignItems: 'center',
+   gap: 8
  },
 
  input: {
@@ -384,11 +450,24 @@ const styles = StyleSheet.create({
    paddingHorizontal: 16,
    paddingVertical: 12,
    fontSize: 16,
-   color: '#fff',
-   marginRight: 10
+   color: '#fff'
  },
 
- // Send button on individual messages.
+ plusButton: {
+   width: 40,
+   height: 40,
+   borderRadius: 20,
+   backgroundColor: '#2c2c2e',
+   justifyContent: 'center',
+   alignItems: 'center'
+ },
+
+ plusText: {
+   color: '#fff',
+   fontSize: 22,
+   fontWeight: 'bold'
+ },
+
  sendButtonContainer: {
    backgroundColor: '#0a84ff',
    paddingHorizontal: 18,
@@ -402,5 +481,13 @@ const styles = StyleSheet.create({
    color: '#fff',
    fontWeight: 'bold',
    fontSize: 15
+ },
+
+ unreadBadge: {
+   width: 10,
+   height: 10,
+   borderRadius: 5,
+   backgroundColor: '#0a84ff',
+   marginLeft: 8
  }
 });
