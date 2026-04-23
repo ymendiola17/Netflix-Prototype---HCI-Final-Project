@@ -8,7 +8,7 @@ import { Link } from 'expo-router';
 import { useTheme } from '../../context/ThemeContext';
 
 export default function ProfileScreen() {
-  const { lists, addList } = useUserLists();
+  const { lists, addList, favorites, removeFavorite, actors, removeActor } = useUserLists();
   const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState<'picks' | 'lists'>('picks');
   const [modalVisible, setModalVisible] = useState(false);
@@ -49,7 +49,7 @@ export default function ProfileScreen() {
           source={require('../../assets/ProfilePictures/profIslam.jpg')}
         />
         <Text style={[styles.name, { color: theme.text }]}>Islam</Text>
-        <Text style={[styles.userName, { color: theme.subtext }]}>@best_professor</Text>
+        <Text style={[styles.userName, { color: theme.subtext }]}>@HCI_professor</Text>
       </View>
 
       {/* Tab Buttons */}
@@ -74,10 +74,64 @@ export default function ProfileScreen() {
 
       {/* My Picks Tab */}
       {activeTab === 'picks' && (
-        <View>
-          <Text style={[styles.sectionTitle, { color: theme.accent }]}>Favorites</Text>
-          <Text style={[styles.sectionTitle, { color: theme.accent }]}>My Actors</Text>
-          <Text style={[styles.sectionTitle, { color: theme.accent }]}>My Genres</Text>
+        <View style={{ paddingHorizontal: 20 }}>
+
+          {/* Favorites */}
+          <View style={styles.sectionBlock}>
+            <Text style={[styles.sectionTitle, { color: theme.accent }]}>favorites</Text>
+            {favorites.length === 0 ? (
+              <Text style={[styles.emptyText, { color: theme.subtext }]}>
+                Star a show or movie to add it here
+              </Text>
+            ) : (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: -20 }}>
+                {favorites.map(item => (
+                  <View key={item.id} style={styles.posterItem}>
+                    <Image
+                      source={typeof item.posterUrl === 'string' ? { uri: item.posterUrl } : item.posterUrl}
+                      style={styles.posterImage}
+                    />
+                    <Text style={[styles.itemLabel, { color: theme.text }]} numberOfLines={1}>
+                      {item.title}
+                    </Text>
+                  </View>
+                ))}
+              </ScrollView>
+            )}
+          </View>
+
+          {/* My Actors */}
+          <View style={styles.sectionBlock}>
+            <Text style={[styles.sectionTitle, { color: theme.accent }]}>my actors</Text>
+            {actors.length === 0 ? (
+              <Text style={[styles.emptyText, { color: theme.subtext }]}>
+                Add actors from a show or movie's cast
+              </Text>
+            ) : (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: -20 }}>
+                {actors.map(actor => (
+                  <View key={actor.id} style={styles.actorItem}>
+                    <Image
+                      source={actor.image}
+                      style={styles.actorImage}
+                    />
+                    <Text style={[styles.itemLabel, { color: theme.text }]} numberOfLines={1}>
+                      {actor.name}
+                    </Text>
+                  </View>
+                ))}
+              </ScrollView>
+            )}
+          </View>
+
+          {/* My Genres */}
+          <View style={styles.sectionBlock}>
+            <Text style={[styles.sectionTitle, { color: theme.accent }]}>my genres</Text>
+            <Text style={[styles.emptyText, { color: theme.subtext }]}>
+              Coming Soon!
+            </Text>
+          </View>
+
         </View>
       )}
 
@@ -119,14 +173,14 @@ const styles = StyleSheet.create({
   profilePic: { borderWidth: 2, width: 90, height: 90, borderRadius: 50 },
   name: { fontSize: 20, marginTop: 10 },
   userName: { fontSize: 15, marginTop: 5 },
-  sectionTitle: { fontSize: 45, fontWeight: '900', marginBottom: 16, textAlign: 'center' },
   tabRow: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 16,
     marginVertical: 20,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingBottom: 15
   },
   tab: {
     borderWidth: 1,
@@ -137,6 +191,51 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   tabText: { fontSize: 14 },
+  sectionBlock: { marginBottom: 8 },
+  sectionTitle: {
+    fontSize: 50,
+    fontWeight: '900',
+    textAlign: 'center',
+  },
+  emptyText: {
+    fontSize: 13,
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  posterItem: {
+    width: 120,
+    marginRight: 12,
+  },
+  posterImage: {
+    width: 120,
+    height: 150,
+    borderRadius: 0,
+  },
+  actorItem: {
+    width: 100,
+    marginRight: 12,
+    alignItems: 'center',
+  },
+  actorImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  itemLabel: {
+    fontSize: 12,
+    marginTop: 5,
+    textAlign: 'center',
+    fontWeight: '900',
+  },
+  moreBox: {
+    position: 'absolute',
+    width: 65,
+    height: 95,
+    borderRadius: 8,
+    borderWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   listRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',

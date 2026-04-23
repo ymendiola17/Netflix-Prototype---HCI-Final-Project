@@ -17,3 +17,9 @@ export interface ListConfig {
   visibleOnHome: boolean;
   font: string;
 }
+
+export interface ActorItem {
+  id: string;
+  name: string;
+  image: any;
+}

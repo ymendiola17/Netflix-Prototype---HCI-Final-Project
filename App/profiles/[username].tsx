@@ -28,6 +28,45 @@ const USERS = {
   },
 } as const;
 
+const USER_DATA = {
+  yani: {
+    favorites: [
+      { id: 'y1', title: 'Dragon Ball Z', posterUrl: require('../../assets/posters/Genre/Anime/DragonBallZ-ResurrectionF.webp') },
+      { id: 'y2', title: 'Anonymously Yours', posterUrl: require('../../assets/posters/Genre/Romance/AnonymouslyYours.webp') },
+    ],
+    actors: [
+      { id: 'ya1', name: 'Adam Sandler', image: require('../../assets/actors/AdamSandler.webp') },
+      { id: 'ya2', name: 'Anne Hathaway', image: require('../../assets/actors/AnneHathaway.webp') },
+    ],
+  },
+  kamy: {
+    favorites: [
+      { id: 'k1', title: 'Avatar Fire and Ash', posterUrl: require('../../assets/posters/Genre/Sci-fi/Avatar-FireAndAsh.webp') },
+      { id: 'k2', title: 'Project Hail Mary', posterUrl: require('../../assets/posters/Genre/Sci-fi/HailMary.webp')}
+    ],
+    actors: [
+      { id: 'ka1', name: 'Jackie Chan', image: require('../../assets/actors/JackieChan.webp') },
+      { id: 'ka2', name: 'Tom Holland', image: require('../../assets/actors/TomHolland.webp')},
+    ],
+  },
+  amber: {
+    favorites: [
+      { id: 'a1', title: 'Romance', posterUrl: require('../../assets/posters/Genre/Romance/BeautyAndTheBeast.webp') },
+    ],
+    actors: [
+      { id: 'aa1', name: 'Morgan Freeman', image: require('../../assets/actors/MorganFreeman.webp') },
+    ],
+  },
+  isaiah: {
+    favorites: [
+      { id: 'i1', title: 'Action', posterUrl: require('../../assets/posters/Genre/Action/BloodHounds3.webp') },
+    ],
+    actors: [
+      { id: 'ia1', name: 'Dylan Obrien', image: require('../../assets/actors/DylanObrien.webp') },
+    ],
+  },
+} as const;
+
 type Username = keyof typeof USERS;
 
 export default function FriendProfilePage() {
@@ -38,6 +77,7 @@ export default function FriendProfilePage() {
   const [activeTab, setActiveTab] = useState<'picks' | 'lists'>('picks');
 
   const user = USERS[username as Username];
+  const userData = USER_DATA[username as Username];
 
   if (!user) return (
     <View style={{ flex: 1, backgroundColor: theme.background, justifyContent: 'center', alignItems: 'center' }}>
@@ -46,8 +86,8 @@ export default function FriendProfilePage() {
   );
 
   return (
-    <ScrollView 
-      style={[styles.container, { backgroundColor: theme.background }]} 
+    <ScrollView
+      style={[styles.container, { backgroundColor: theme.background }]}
       contentContainerStyle={{ paddingBottom: 40 }}
     >
       {/* Back button */}
@@ -84,17 +124,57 @@ export default function FriendProfilePage() {
         </TouchableOpacity>
       </View>
 
+      {/* Picks Tab */}
       {activeTab === 'picks' && (
         <View style={{ paddingHorizontal: 20 }}>
-          <Text style={[styles.sectionTitle, { color: theme.accent }]}>Favorites</Text>
-          <Text style={[styles.sectionTitle, { color: theme.accent }]}>Actors</Text>
-          <Text style={[styles.sectionTitle, { color: theme.accent }]}>Genres</Text>
+
+          {/* Favorites */}
+          <View style={styles.sectionBlock}>
+            <View style={styles.titleRow}>
+              <Text style={[styles.sectionTitle, { color: theme.accent }]}>favorites</Text>
+      
+            </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: -20 }}>
+              {userData?.favorites.map(item => (
+                <View key={item.id} style={styles.posterItem}>
+                  <Image source={item.posterUrl} style={styles.posterImage} />
+                  <Text style={[styles.itemLabel, { color: theme.text }]} numberOfLines={1}>
+                    {item.title}
+                  </Text>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+
+          {/* My Actors */}
+          <View style={styles.sectionBlock}>
+            <Text style={[styles.sectionTitle, { color: theme.accent }]}>actors</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: -20 }}>
+              {userData?.actors.map(actor => (
+                <View key={actor.id} style={styles.actorItem}>
+                  <Image source={actor.image} style={styles.actorImage} />
+                  <Text style={[styles.itemLabel, { color: theme.text }]} numberOfLines={1}>
+                    {actor.name}
+                  </Text>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+
+          {/* My Genres */}
+          <View style={styles.sectionBlock}>
+            <Text style={[styles.sectionTitle, { color: theme.accent }]}>genres</Text>
+            <Text style={[styles.emptyText, { color: theme.subtext }]}>Coming Soon!</Text>
+          </View>
+
         </View>
       )}
 
+      {/* Lists Tab */}
       {activeTab === 'lists' && (
         <View style={{ paddingHorizontal: 20 }}>
-          <Text style={[styles.listTitle, { color: theme.text }]}>Lists</Text>
+          <Text style={[styles.sectionTitle, { color: theme.accent }]}>Lists</Text>
+          <Text style={[styles.emptyText, { color: theme.subtext }]}>No lists yet</Text>
         </View>
       )}
 
@@ -112,6 +192,26 @@ const styles = StyleSheet.create({
   tabRow: { flexDirection: 'row', justifyContent: 'center', gap: 16, marginVertical: 20 },
   tab: { borderWidth: 1, width: '45%', height: 36, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
   tabText: { fontSize: 14 },
-  sectionTitle: { fontSize: 45, fontWeight: '900', marginBottom: 16, textAlign: 'center' },
-  listTitle: { fontSize: 22, fontWeight: '600', marginBottom: 16 },
+  sectionBlock: { marginBottom: 8 },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    gap: 6,
+  },
+  sectionTitle: {
+    fontSize: 50,
+    fontWeight: '900',
+    textAlign: 'center',
+  },
+  emptyText: {
+    fontSize: 13,
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  posterItem: { width: 120, marginRight: 12 },
+  posterImage: { width: 120, height: 150, borderRadius: 0 },
+  actorItem: { width: 100, marginRight: 12, alignItems: 'center' },
+  actorImage: { width: 100, height: 100, borderRadius: 50 },
+  itemLabel: { fontSize: 12, marginTop: 5, textAlign: 'center', fontWeight: '900' },
 });
