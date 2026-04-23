@@ -18,14 +18,12 @@ import { useUserLists } from '../../context/UserListContext';
 import { Link } from 'expo-router';
 import { useTheme } from '../../context/ThemeContext';
 
-const EXCLUDED_FROM_FILTER = ['Keep Watching', 'Trending Now']; // These lists are more about user activity than specific genres, so we exclude them from genre filtering.
+const EXCLUDED_FROM_FILTER = ['Keep Watching', 'Trending Now'];
 
 export default function HomeScreen() {
-  const { lists } = useUserLists();
+  const { lists, toggleHomeVisibility } = useUserLists();
   const { theme } = useTheme();
-
   const [filterVisible, setFilterVisible] = useState(false);
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
 
   const sorted = useMemo(() => {
     return [...lists]
@@ -33,34 +31,15 @@ export default function HomeScreen() {
       .sort((a, b) => a.order - b.order);
   }, [lists]);
 
-  const genres = useMemo(() => {
-    return [...new Set(
-      sorted
-        .map(list => list.title)
-        .filter(title => !EXCLUDED_FROM_FILTER.includes(title))
-    )];
-  }, [sorted]);
+  const allToggleableLists = useMemo(() => {
+    return lists.filter(list => !EXCLUDED_FROM_FILTER.includes(list.title));
+  }, [lists]);
 
   const filteredLists = useMemo(() => {
-    if (selectedGenres.length === 0) return sorted;
-    return sorted.filter(
-      list =>
-        EXCLUDED_FROM_FILTER.includes(list.title) ||
-        selectedGenres.includes(list.title)
-    );
-  }, [sorted, selectedGenres]);
-
-  const toggleGenre = (genre: string) => {
-    setSelectedGenres(prev =>
-      prev.includes(genre)
-        ? prev.filter(g => g !== genre)
-        : [...prev, genre]
-    );
-  };
-
-  const clearFilters = () => {
-    setSelectedGenres([]);
-  };
+    return [...lists]
+      .filter(list => list.visibleOnHome)
+      .sort((a, b) => a.order - b.order);
+  }, [lists]);
 
   return (
     <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
@@ -69,7 +48,6 @@ export default function HomeScreen() {
           <View style={styles.searchContainer}>
             <SearchHeader />
           </View>
-
           <TouchableOpacity
             onPress={() => setFilterVisible(true)}
             style={styles.filterButton}
@@ -96,7 +74,6 @@ export default function HomeScreen() {
                 <Text style={[styles.userName, { color: theme.text }]}>Yani</Text>
               </TouchableOpacity>
             </Link>
-
             <Link href="/profiles/kamy" asChild>
               <TouchableOpacity style={styles.activeTab}>
                 <Image
@@ -106,7 +83,6 @@ export default function HomeScreen() {
                 <Text style={[styles.userName, { color: theme.text }]}>Kamy</Text>
               </TouchableOpacity>
             </Link>
-
             <Link href="/profiles/amber" asChild>
               <TouchableOpacity style={styles.activeTab}>
                 <Image
@@ -116,7 +92,6 @@ export default function HomeScreen() {
                 <Text style={[styles.userName, { color: theme.text }]}>Amber</Text>
               </TouchableOpacity>
             </Link>
-
             <Link href="/profiles/isaiah" asChild>
               <TouchableOpacity style={styles.activeTab}>
                 <Image
@@ -128,7 +103,6 @@ export default function HomeScreen() {
             </Link>
           </View>
 
-          {/*----List Boxes----*/}
           <View style={{ marginTop: 24 }}>
             {filteredLists.map(list => (
               <ContentRow key={list.id} title={list.title} items={list.items} />
@@ -136,6 +110,7 @@ export default function HomeScreen() {
           </View>
         </ScrollView>
 
+        {/* Filter Modal */}
         <Modal
           visible={filterVisible}
           transparent
@@ -151,48 +126,53 @@ export default function HomeScreen() {
               onPress={() => {}}
             >
               <Text style={[styles.modalTitle, { color: theme.text }]}>
-                Filter by Genre
+                Manage Home Rows
+              </Text>
+              <Text style={[styles.modalSubtitle, { color: theme.subtext }]}>
+                Tap to show or hide rows on your home page
               </Text>
 
-              {genres.map(genre => {
-                const selected = selectedGenres.includes(genre);
-
-                return (
-                  <TouchableOpacity
-                    key={genre}
-                    style={styles.optionRow}
-                    onPress={() => toggleGenre(genre)}
-                    activeOpacity={0.7}
-                  >
-                    <View style={[
-                      styles.checkbox,
-                      {
-                        borderColor: theme.accent,
-                        backgroundColor: selected ? theme.accent : 'transparent',
-                      }
-                    ]}>
-                      {selected && (
-                        <Ionicons name="checkmark" size={14} color="#fff" />
-                      )}
-                    </View>
-
-                    <Text style={[styles.optionText, { color: theme.text }]}>
-                      {genre}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
+              <ScrollView style={{ maxHeight: 400 }}>
+                {allToggleableLists.map(list => {
+                  const isVisible = list.visibleOnHome;
+                  return (
+                    <TouchableOpacity
+                      key={list.id}
+                      style={styles.optionRow}
+                      onPress={() => toggleHomeVisibility(list.id)}
+                      activeOpacity={0.7}
+                    >
+                      <View style={[
+                        styles.checkbox,
+                        {
+                          borderColor: theme.accent,
+                          backgroundColor: isVisible ? theme.accent : 'transparent',
+                        }
+                      ]}>
+                        {isVisible && (
+                          <Ionicons name="checkmark" size={14} color="#fff" />
+                        )}
+                      </View>
+                      <Text style={[styles.optionText, { color: theme.text }]}>
+                        {list.title}
+                      </Text>
+                      <Ionicons
+                        name={isVisible ? 'eye' : 'eye-off-outline'}
+                        size={18}
+                        color={isVisible ? theme.accent : theme.subtext}
+                        style={{ marginLeft: 'auto' }}
+                      />
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
 
               <View style={styles.modalActions}>
-                <TouchableOpacity onPress={clearFilters} style={styles.actionBtn}>
-                  <Text style={{ color: theme.text }}>Clear</Text>
-                </TouchableOpacity>
-
                 <TouchableOpacity
                   onPress={() => setFilterVisible(false)}
-                  style={styles.actionBtn}
+                  style={[styles.actionBtn, { backgroundColor: theme.accent }]}
                 >
-                  <Text style={{ color: theme.text }}>Done</Text>
+                  <Text style={{ color: 'white', fontWeight: '600' }}>Done</Text>
                 </TouchableOpacity>
               </View>
             </Pressable>
@@ -204,19 +184,14 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 5,
-  },
+  container: { flex: 1, padding: 5 },
   searchRow: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 8,
     gap: 10,
   },
-  searchContainer: {
-    flex: 1,
-  },
+  searchContainer: { flex: 1 },
   filterButton: {
     width: 42,
     height: 42,
@@ -243,31 +218,19 @@ const styles = StyleSheet.create({
     gap: 20,
     padding: 0.5,
   },
-  userName: {
-    fontSize: 13,
-    textAlign: 'center',
-  },
-  titleHeader: {
-    fontSize: 25,
-    fontFamily: 'BebasNeue',
-  },
+  userName: { fontSize: 13, textAlign: 'center' },
+  titleHeader: { fontSize: 25, fontFamily: 'BebasNeue' },
   activeTab: {},
-  tabText: {
-    fontSize: 12,
-  },
   optionRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 14,
     paddingHorizontal: 4,
     borderBottomWidth: 0.5,
     borderBottomColor: '#333',
     gap: 12,
   },
-  optionText: {
-    fontSize: 18,
-    
-  },
+  optionText: { fontSize: 16 },
   checkbox: {
     width: 22,
     height: 22,
@@ -278,29 +241,24 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     paddingHorizontal: 24,
   },
   modalContent: {
     borderRadius: 16,
     padding: 20,
-    maxHeight: '70%',
-
   },
-  modalTitle: {
-    fontSize: 22,
-    fontWeight: '600',
-    marginBottom: 16,
-  },
+  modalTitle: { fontSize: 20, fontWeight: '600', marginBottom: 4 },
+  modalSubtitle: { fontSize: 13, marginBottom: 16 },
   modalActions: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     marginTop: 16,
-    gap: 16,
   },
   actionBtn: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 24,
+    borderRadius: 20,
   },
 });

@@ -4,22 +4,16 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { useUserLists } from '../context/UserListContext';
 
 export default function SettingsPage() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { theme, themeName, setTheme, THEMES } = useTheme();
-  const [username, setUsername] = useState('Username');
+  const { lists, toggleHomeVisibility } = useUserLists();
+  const [username, setUsername] = useState('Islam');
   const [editingUsername, setEditingUsername] = useState(false);
   const [tempUsername, setTempUsername] = useState(username);
-
-  const themeLabels: Record<string, string> = {
-    netflix: 'Netflix',
-    midnight: 'Midnight',
-    forest: 'Forest',
-    ocean: 'Ocean',
-    sunset: 'Sunset',
-  };
 
   return (
     <ScrollView
@@ -65,24 +59,43 @@ export default function SettingsPage() {
       </View>
 
       {/* Appearance */}
-      {/* Appearance */}
-    <Text style={[styles.sectionHeader, { color: theme.subtext }]}>APPEARANCE</Text>
-    <View style={[styles.card, { backgroundColor: theme.surface }]}>
-    <Text style={[styles.label, { color: theme.subtext }]}>Theme</Text>
-    <View style={styles.themesGrid}>
-        {Object.entries(THEMES).map(([key, t]) => (
-        <TouchableOpacity
-            key={key}
-            onPress={() => setTheme(key)}
-            style={[
-            styles.themeOption,
-            { backgroundColor: t.accent },
-            themeName === key && { borderWidth: 3, borderColor: theme.text },
-            ]}
-        />
+      <Text style={[styles.sectionHeader, { color: theme.subtext }]}>APPEARANCE</Text>
+      <View style={[styles.card, { backgroundColor: theme.surface }]}>
+        <Text style={[styles.label, { color: theme.subtext }]}>Theme</Text>
+        <View style={styles.themesGrid}>
+          {Object.entries(THEMES).map(([key, t]) => (
+            <TouchableOpacity
+              key={key}
+              onPress={() => setTheme(key)}
+              style={[
+                styles.themeOption,
+                { backgroundColor: t.accent },
+                themeName === key && { borderWidth: 3, borderColor: theme.text },
+              ]}
+            />
+          ))}
+        </View>
+      </View>
+
+      {/* Manage Home */}
+      <Text style={[styles.sectionHeader, { color: theme.subtext }]}>MANAGE HOME</Text>
+      <View style={[styles.card, { backgroundColor: theme.surface }]}>
+        <Text style={[styles.label, { color: theme.subtext }]}>Rows shown on home</Text>
+        {lists.map(list => (
+          <TouchableOpacity
+            key={list.id}
+            style={[styles.editRow, styles.listRow]}
+            onPress={() => toggleHomeVisibility(list.id)}
+          >
+            <Text style={[styles.value, { color: theme.text }]}>{list.title}</Text>
+            <Ionicons
+              name={list.visibleOnHome ? 'eye' : 'eye-off-outline'}
+              size={22}
+              color={list.visibleOnHome ? theme.accent : theme.subtext}
+            />
+          </TouchableOpacity>
         ))}
-    </View>
-    </View>
+      </View>
 
     </ScrollView>
   );
@@ -117,6 +130,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  listRow: {
+    paddingVertical: 12,
+    borderBottomWidth: 0.5,
+    borderBottomColor: 'rgba(255,255,255,0.1)',
+  },
   value: { fontSize: 16 },
   input: {
     flex: 1,
@@ -137,10 +155,4 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
   },
-  accentDot: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-  },
-  themeLabel: { fontSize: 11 },
 });
