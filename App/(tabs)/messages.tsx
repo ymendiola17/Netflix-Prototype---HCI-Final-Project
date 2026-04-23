@@ -15,7 +15,6 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import * as DocumentPicker from 'expo-document-picker';
 
-// Structure for messages.
 type Message = {
   id: string;
   name: string;
@@ -25,7 +24,6 @@ type Message = {
   avatar: any;
 };
 
-// Structure for individual chat messages.
 type ChatMessage = {
   id: string;
   text: string;
@@ -35,12 +33,40 @@ type ChatMessage = {
 export default function Page() {
   const navigation = useNavigation();
 
-  // State for user's status and messages.
   const [myStatus, setMyStatus] = useState(' ');
-  const fixedStatuses = ['Happy!', 'Sad :(', 'Eh'];
-  const allStatuses = [myStatus, ...fixedStatuses];
+  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
+  const [replyText, setReplyText] = useState('');
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
 
-  // Sample messages for the inbox.
+  const statusUsers = [
+    {
+      name: 'You',
+      status: myStatus,
+      avatar: require('../../assets/ProfilePictures/yani.jpeg'),
+    },
+    {
+      name: 'Kamy',
+      status: 'Happy!',
+      avatar: require('../../assets/ProfilePictures/kamy.jpg'),
+    },
+    {
+      name: 'Isaiah',
+      status: 'Sad :(',
+      avatar: require('../../assets/ProfilePictures/isaiah.jpg'),
+    },
+    {
+      name: 'Amber',
+      status: 'Eh',
+      avatar: require('../../assets/ProfilePictures/amber.jpg'),
+  
+    },
+    {
+      name: 'Yani',
+      status: 'ss3!!!',
+      avatar: require('../../assets/ProfilePictures/yani.jpeg'),
+    }
+  ];
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -74,10 +100,6 @@ export default function Page() {
     },
   ]);
 
-  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
-  const [replyText, setReplyText] = useState('');
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
-
   const updateMyStatus = () => {
     if (Platform.OS === 'ios') {
       Alert.prompt('Update Status', 'Your thoughts go here...', (val) => {
@@ -104,7 +126,6 @@ export default function Page() {
     setReplyText('');
   };
 
-  // Movie / file upload
   const pickMovieFile = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
@@ -129,7 +150,6 @@ export default function Page() {
     }
   };
 
-  // Open message + remove unread badge
   const openMessage = (msg: Message) => {
     setMessages((prev) =>
       prev.map((m) => (m.id === msg.id ? { ...m, unread: false } : m))
@@ -174,16 +194,16 @@ export default function Page() {
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.statusScroll}
               >
-                {allStatuses.map((feeling, index) => (
+                {statusUsers.map((user, index) => (
                   <View key={index} style={styles.statusWrapper}>
                     <View
                       style={[
                         styles.cloudBubble,
-                        { opacity: feeling.trim().length > 0 ? 1 : 0 },
+                        { opacity: user.status.trim().length > 0 ? 1 : 0 },
                       ]}
                     >
                       <Text style={styles.cloudText} numberOfLines={1}>
-                        {feeling}
+                        {user.status}
                       </Text>
                       <View style={styles.cloudTail} />
                     </View>
@@ -195,16 +215,12 @@ export default function Page() {
                       ]}
                       onPress={index === 0 ? updateMyStatus : undefined}
                     >
-                      {index === 0 && myStatus.trim().length === 0 ? (
+                      {index === 0 && user.status.trim().length === 0 ? (
                         <Text style={{ fontSize: 24 }}>+</Text>
                       ) : (
                         <Image
-                          source={
-                            index === 0
-                              ? require('../../assets/ProfilePictures/profIslam.jpg') // YOU
-                              : require('../../assets/ProfilePictures/amber.jpg') // others
-                          }
-                          style={{ width: 55, height: 55, borderRadius: 30 }}
+                          source={user.avatar}
+                          style={styles.statusAvatarImage}
                         />
                       )}
                     </TouchableOpacity>
@@ -306,9 +322,9 @@ export default function Page() {
   );
 }
 
-// Border colors for status circles.
 const getBorderColor = (index: number) => {
-  const colors = ['#d14775', '#260de6', '#71f439', '#fec004'];
+  const colors = ['white'];
+  
   return colors[index % colors.length];
 };
 
@@ -371,13 +387,19 @@ const styles = StyleSheet.create({
   },
 
   statusCircle: {
-    width: 63,
-    height: 63,
-    borderRadius: 30,
-    borderWidth: 3,
+    width: 70,
+    height: 70,
+    borderRadius: 75,
+    borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
+    overflow: 'hidden',
+  },
+
+  statusAvatarImage: {
+    width: '100%',
+    height: '100%',
   },
 
   cloudBubble: {
