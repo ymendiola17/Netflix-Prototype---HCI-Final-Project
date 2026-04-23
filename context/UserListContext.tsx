@@ -46,8 +46,8 @@ export function UserListsProvider({ children }: { children: React.ReactNode })
             ],
         },  
         {
-            id: 'myList',
-            title: 'My List',
+            id: 'Top 10 in the US',
+            title: 'Top 10 in the US',
             type: 'custom',
             font: 'BebasNeue',
             order: 1,

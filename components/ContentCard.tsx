@@ -29,7 +29,7 @@ export default function ContentCard({
 
           {showVideo && (
             <Video
-              source={require('../../assets/movieFile/movie.mp4')} // Placeholder video URL
+              source={require('../assets/movieFile/movie.mp4')} // Placeholder video URL
               style={{ width: 300, height: 200 }}
               useNativeControls
               resizeMode={ResizeMode.CONTAIN}
