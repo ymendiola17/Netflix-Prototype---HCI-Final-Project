@@ -4,7 +4,7 @@ export interface ContentItem {
   posterUrl: any;
   type: 'movie' | 'show';
   isFavorited?: boolean;
-  genre: 'Action' | 'Thriller' | 'Romance' | 'Sci-Fi' | 'ChildrenAndFamily' | 'Anime';
+  genre: 'Action' | 'Thriller' | 'Romance' | 'Sci-Fi' | 'ChildrenAndFamily' | 'Anime' | 'Comedy' | 'Horror';
   font: string;
 }
 
