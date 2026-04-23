@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as DocumentPicker from 'expo-document-picker';
+import {useFonts,Roboto_500Medium_Italic,} from '@expo-google-fonts/roboto';
 
 type Message = {
   id: string;
@@ -363,6 +364,7 @@ const styles = StyleSheet.create({
 
   headerTitle: {
     fontSize: 25,
+    fontFamily: 'Roboto_500Medium_Italic',
     fontWeight: 'bold',
     color: '#fff',
     textAlign: 'center',
@@ -417,7 +419,8 @@ const styles = StyleSheet.create({
   cloudTail: {},
 
   subHeader: {
-    fontSize: 25,
+    fontSize: 35,
+    fontFamily: 'Roboto_500Medium_Italic',
     fontWeight: 'bold',
     paddingHorizontal: 20,
     paddingVertical: 15,

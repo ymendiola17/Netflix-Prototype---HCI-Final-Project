@@ -2,7 +2,11 @@ import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { ContentItem } from '../types';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { Video, ResizeMode } from 'expo-av';
+import { useState } from 'react';
 
+
+const [showVideo, setShowVideo] = useState(false);
 export default function ContentCard({
   item,
   showActions = false,
@@ -19,9 +23,19 @@ export default function ContentCard({
       {showActions && (
         <View style={styles.actions}>
           <TouchableOpacity style={styles.playButton}
-            onPress={() => router.push('assets/movieFile/a9739e2d05c14a1b9c5adb565c820f44.MOv')}>
+            onPress={() => setShowVideo(true)}>
             <Ionicons name="play" size={16} color="white" />
           </TouchableOpacity>
+
+          {showVideo && (
+            <Video
+              source={require('../../assets/movieFile/movie.mp4')} // Placeholder video URL
+              style={{ width: 300, height: 200 }}
+              useNativeControls
+              resizeMode={ResizeMode.CONTAIN}
+              isLooping
+            />
+          )}
 
           <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/moviesdescription')}>
             <Ionicons name="information-circle-outline" size={20} color="white" />
