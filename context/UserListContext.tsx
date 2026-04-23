@@ -34,7 +34,7 @@ export function UserListsProvider({ children }: { children: React.ReactNode })
         {
             id: 'KeepWatching',
             title: 'Keep Watching',
-            type: 'custom',
+            type: 'category',
             font: 'BebasNeue',
             order: 1,
             visibleOnHome: true,
@@ -48,7 +48,7 @@ export function UserListsProvider({ children }: { children: React.ReactNode })
         {
             id: 'myList',
             title: 'My List',
-            type: 'custom',
+            type: 'category',
             font: 'BebasNeue',
             order: 1,
             visibleOnHome: true,

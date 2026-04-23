@@ -21,31 +21,22 @@ export default function ContentCard({
       </TouchableOpacity>
 
       {showActions && (
-        <View style={styles.actions}>
-          <TouchableOpacity style={styles.playButton}
-            onPress={() => setShowVideo(true)}>
-            <Ionicons name="play" size={16} color="white" />
-          </TouchableOpacity>
-
-          {showVideo && (
-            <Video
-              source={require('../../assets/movieFile/movie.mp4')} // Placeholder video URL
-              style={{ width: 300, height: 200 }}
-              useNativeControls
-              resizeMode={ResizeMode.CONTAIN}
-              isLooping
-            />
-          )}
+  <View style={styles.actions}>
+    <TouchableOpacity style={styles.playButton}>
+      <Ionicons name="play" size={16} color="white" />
+    </TouchableOpacity>
+    <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/moviesdescription')}>
+      <Ionicons name="information-circle-outline" size={20} color="white" />
+    </TouchableOpacity>
+  </View>
+)}
 
           <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/moviesdescription')}>
             <Ionicons name="information-circle-outline" size={20} color="white" />
           </TouchableOpacity>
         </View>
       )}
-    </View>
-  );
-}
-
+      
 const styles = StyleSheet.create({
   card: {
     width: 110,
