@@ -13,8 +13,13 @@ export default function ContentRow({ title, items }: Props) {
       <Text style={styles.title}>{title}</Text>
       <FlatList
         data={items}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => <ContentCard item={item} />}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <ContentCard
+            item={item}
+            showActions={title === 'My List'}
+          />
+        )}
         horizontal
         showsHorizontalScrollIndicator={false}
       />
@@ -24,5 +29,11 @@ export default function ContentRow({ title, items }: Props) {
 
 const styles = StyleSheet.create({
   container: { marginBottom: 20 },
-  title: { color: '#fff', fontSize: 25, fontFamily: 'BebasNeue', marginBottom: 10, paddingHorizontal: 5 },
+  title: {
+    color: '#fff',
+    fontSize: 25,
+    fontFamily: 'BebasNeue',
+    marginBottom: 10,
+    paddingHorizontal: 5,
+  },
 });

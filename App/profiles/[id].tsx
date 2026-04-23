@@ -49,6 +49,7 @@ export default function ProfileScreen() {
           headerTintColor: '#fff',
           headerTitle: '',
           headerShadowVisible: false,
+          headerBackTitle: 'Back',
         }}
       />
 
