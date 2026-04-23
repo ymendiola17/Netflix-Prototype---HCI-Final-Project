@@ -21,6 +21,7 @@ export default function ContentCard({
       </TouchableOpacity>
 
       {showActions && (
+<<<<<<< HEAD
   <View style={styles.actions}>
     <TouchableOpacity style={styles.playButton}>
       <Ionicons name="play" size={16} color="white" />
@@ -30,6 +31,23 @@ export default function ContentCard({
     </TouchableOpacity>
   </View>
 )}
+=======
+        <View style={styles.actions}>
+          <TouchableOpacity style={styles.playButton}
+            onPress={() => setShowVideo(true)}>
+            <Ionicons name="play" size={16} color="white" />
+          </TouchableOpacity>
+
+          {showVideo && (
+            <Video
+              source={require('../assets/movieFile/movie.mp4')} // Placeholder video URL
+              style={{ width: 300, height: 200 }}
+              useNativeControls
+              resizeMode={ResizeMode.CONTAIN}
+              isLooping
+            />
+          )}
+>>>>>>> 364176b0d6489c7abe4f14a1deaf1311bc016462
 
           <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/moviesdescription')}>
             <Ionicons name="information-circle-outline" size={20} color="white" />
