@@ -18,12 +18,13 @@ export default function ContentCard({
 
       {showActions && (
         <View style={styles.actions}>
-          <TouchableOpacity style={styles.playButton}>
-            <Ionicons name="play" size={16} color="black" />
+          <TouchableOpacity style={styles.playButton}
+            onPress={() => router.push('assets/movieFile/a9739e2d05c14a1b9c5adb565c820f44.MOv')}>
+            <Ionicons name="play" size={16} color="white" />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="information-circle-outline" size={18} color="white" />
+          <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/moviesdescription')}>
+            <Ionicons name="information-circle-outline" size={20} color="white" />
           </TouchableOpacity>
         </View>
       )}
@@ -51,12 +52,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
   },
   playButton: {
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     padding: 6,
     borderRadius: 20,
   },
   iconButton: {
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: 'transparent',
     padding: 6,
     borderRadius: 20,
   },
