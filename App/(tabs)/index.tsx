@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import SearchHeader from '../../components/SearchHeader';
 import ContentRow from '../../components/ContentRow';
 import { useUserLists } from '../../context/UserListContext';
+import { ContentItem } from '../../types';
 import { Link } from 'expo-router';
 
 export default function HomeScreen() {
@@ -39,7 +40,7 @@ export default function HomeScreen() {
           <Link href="/profiles/kamy" asChild>
             <TouchableOpacity style={styles.activeTab}>
               <Image
-                source={require('../../assets/ProfilePictures/profIslam.jpg')}
+                source={require('../../assets/ProfilePictures/kamy.jpg')}
                 style={styles.friendList}
               />
               <Text style={styles.userName}>Kamy</Text>
@@ -59,7 +60,7 @@ export default function HomeScreen() {
             <Link href="/profiles/isaiah" asChild>
               <TouchableOpacity style={styles.activeTab}>
                 <Image
-                  source={require('../../assets/ProfilePictures/profIslam.jpg')}
+                  source={require('../../assets/ProfilePictures/isaiah.jpg')}
                   style={styles.friendList}
                 />
                 <Text style={styles.userName}>Isaiah</Text>
